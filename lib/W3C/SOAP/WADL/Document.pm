@@ -1,6 +1,6 @@
-package W3C::SOAP::WADL;
+package W3C::SOAP::WADL::Document;
 
-# Created on: 2013-04-20 13:30:57
+# Created on: 2013-04-21 10:44:31
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -14,15 +14,45 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::WADL::Document::Resources;
 
-extends 'W3C::SOAP::Client';
+extends 'W3C::SOAP::Document';
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+has resources => (
+    is         => 'rw',
+    isa        => 'ArrayRef[W3C::SOAP::WADL::Document::Resources]',
+    builder    => '_resources',
+    lazy_build => 1,
+);
 
+sub _resources {
+    my ($self) = @_;
+    my @messages;
+    my @nodes = $self->xpc->findnodes('//wadl:resources');
+
+    for my $node (@nodes) {
+        push @messages, W3C::SOAP::WADL::Document::Resources->new(
+            document => $self,
+            node     => $node,
+        );
+    }
+
+    return \@messages;
+}
+
+around _xpc => sub {
+    my ($orig, $class, @args) = @_;
+
+    my $xpc = $class->$orig(@args);
+    $xpc->registerNs( wadl => 'http://wadl.dev.java.net/2009/02' );
+
+    return $xpc;
+};
 
 1;
 
@@ -30,16 +60,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL version 0.1.
+This documentation refers to W3C::SOAP::WADL::Document version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL;
+   use W3C::SOAP::WADL::Document;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

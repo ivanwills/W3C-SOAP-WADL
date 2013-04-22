@@ -1,6 +1,6 @@
-package W3C::SOAP::WADL;
+package W3C::SOAP::WADL::Document::Resources;
 
-# Created on: 2013-04-20 13:30:57
+# Created on: 2013-04-22 20:31:26
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -15,14 +15,24 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-extends 'W3C::SOAP::Client';
+extends 'W3C::SOAP::WADL::Document::Node';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
+
+has base => (
+    is         => 'rw',
+    isa        => 'Str',
+    builder    => '_base',
+    lazy_build => 1,
+);
 
 
+sub _base {
+    my ($self) = @_;
+    my $node = $self->node;
+
+    return $node->getAttribute('base');
+}
 
 1;
 
@@ -30,16 +40,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Resources - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL version 0.1.
+This documentation refers to W3C::SOAP::WADL::Document::Resources version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL;
+   use W3C::SOAP::WADL::Document::Resources;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

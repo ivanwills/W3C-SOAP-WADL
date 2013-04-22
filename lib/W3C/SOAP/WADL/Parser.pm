@@ -1,6 +1,6 @@
-package W3C::SOAP::WADL;
+package W3C::SOAP::WADL::Parser;
 
-# Created on: 2013-04-20 13:30:57
+# Created on: 2013-04-21 10:52:01
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -14,13 +14,41 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::WADL::Document;
+use File::ShareDir qw/dist_dir/;
+use Moose::Util::TypeConstraints;
+use W3C::SOAP::Utils qw/split_ns/;
+use W3C::SOAP::XSD;
 
-extends 'W3C::SOAP::Client';
+Moose::Exporter->setup_import_methods(
+    as_is => ['load_wadl'],
+);
 
-our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
+extends 'W3C::SOAP::Parser';
+
+our $VERSION = version->new('0.0.1');
+
+has '+document' => (
+    isa      => 'W3C::SOAP::WSDL::Document',
+    required => 1,
+    handles  => {
+        module          => 'module',
+        has_module      => 'has_module',
+        ns_module_map   => 'ns_module_map',
+        module_base     => 'module_base',
+        has_module_base => 'has_module_base'
+    },
+);
+
+sub write_modules {
+    my ($self) = @_;
+
+}
+
+sub load_wadl {
+    my ($self) = @_;
+
+}
 
 
 
@@ -30,16 +58,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL - <One-line description of module's purpose>
+W3C::SOAP::WADL::Parser - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL version 0.1.
+This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL;
+   use W3C::SOAP::WADL::Parser;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as
