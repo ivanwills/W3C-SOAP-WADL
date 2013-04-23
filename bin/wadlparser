@@ -87,7 +87,7 @@ sub main {
     return show() if $option{show};
 
     my $template = Template->new(
-        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '') . dist_dir('W3C-SOAP'),
+        INCLUDE_PATH => ($option{path} ? "$option{path}:" : '') . dist_dir('W3C-SOAP-WADL') . ':' . dist_dir('W3C-SOAP'),
         INTERPOLATE  => 0,
         EVAL_PERL    => 1,
     );
@@ -137,33 +137,35 @@ sub show {
     for my $module (keys %map) {
         my $wadl = W3C::SOAP::WADL::Document->new(
             %option,
-            location => $map{$module},
+            file => $map{$module},
         );
         print $wadl->target_namespace, "\n";
         print "Resources :\n";
         for my $node (@{ $wadl->resources }) {
             print "\t", $node->base, "\n";
             print "\tResource :\n";
-            #for my $node (@{ $wadl->services }) {
-            #    print "\t", $node->name, "\n";
-            #    for my $port (@{ $node->ports }) {
-            #        print "\t\t", $port->binding->name, ' : ', $port->address, "\n";
-            #        for my $operation (@{ $port->binding->operations }) {
-            #            print "\t\t\t", $operation->name, "\n";
-            #            for my $dir (qw/inputs outputs faults/) {
-            #                print "\t\t\t\t$dir: ";
-            #                if ($operation->port_type->$dir->[0]->message->element) {
-            #                    print $operation->port_type->$dir->[0]->message->element->type_module;
-            #                }
-            #                elsif ($operation->port_type->$dir->[0]->message->type) {
-            #                    print $operation->port_type->$dir->[0]->message->type;
-            #                }
-            #                print "\n";
-            #            }
-            #        }
-            #    }
-            #}
+            for my $node (@{ $node->resource }) {
+                print "\t\t", $node->path, ' (', $node->id, ")\n";
+                for my $method (@{ $node->method }) {
+                    print "\t\t\t", $method->name, ' (', $method->id, ")\n";
+                    print "\t\t\t\tRequest:\n";
+                    for my $param (@{ $method->request->param }) {
+                        print "\t\t\t\t\t", $param->name, "\n";
+                    }
+                    for my $response (@{ $method->response }) {
+                        print "\t\t\t\tResponse (", $response->status, ")\n";
+                        for my $param (@{ $response->param }) {
+                            print "\t\t\t\t\t\t", $param->name, "\n";
+                        }
+                        eval { $response->representation };
+                        eval { warn Dumper $response->representation->[0]->{_node}->toString };
+                        print "\t\t\t\t\t\tReturns : ", $response->representation->[0]->media_type, "\n"
+                            if %{ $response->representation->[0] };
+                    }
+                }
+            }
         }
+        #print Dumper $wadl;
     }
 
     return;

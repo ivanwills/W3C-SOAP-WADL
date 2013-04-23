@@ -15,6 +15,7 @@ use List::Util;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document;
+use Path::Class;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;
@@ -29,7 +30,7 @@ extends 'W3C::SOAP::Parser';
 our $VERSION = version->new('0.0.1');
 
 has '+document' => (
-    isa      => 'W3C::SOAP::WSDL::Document',
+    isa      => 'W3C::SOAP::WADL::Document',
     required => 1,
     handles  => {
         module          => 'module',
@@ -40,9 +41,40 @@ has '+document' => (
     },
 );
 
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    $args->{file} = $args->{location} if $args->{location};
+
+    $class->$orig($args);
+};
+
 sub write_modules {
     my ($self) = @_;
+    confess "No lib directory setup" if !$self->has_lib;
+    confess "No module name setup"   if !$self->has_module;
+    confess "No template object set" if !$self->has_template;
 
+    my $wsdl = $self->document;
+    my $template = $self->template;
+    my $file     = $self->lib . '/' . $self->module . '.pm';
+    $file =~ s{::}{/}g;
+    warn $file = file $file;
+    my $parent = $file->parent;
+    my @missing;
+    while ( !-d $parent ) {
+        push @missing, $parent;
+        $parent = $parent->parent;
+    }
+    mkdir $_ for reverse @missing;
+
+
+    warn Dumper $self->document;
+    warn $self->document->_file;
 }
 
 sub load_wadl {
