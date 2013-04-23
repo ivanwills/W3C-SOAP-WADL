@@ -6,22 +6,20 @@ package W3C::SOAP::WADL::Document::Request;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use XML::Rabbit;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-
+use W3C::SOAP::WADL::Document::Param;
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
+has_xpath_object_list param => (
+    './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
+);
 
+finalize_class();
 
 1;
 

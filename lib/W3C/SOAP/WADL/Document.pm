@@ -6,53 +6,41 @@ package W3C::SOAP::WADL::Document;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use XML::Rabbit::Root;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Resources;
 
-extends 'W3C::SOAP::Document';
-
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
-has resources => (
-    is         => 'rw',
-    isa        => 'ArrayRef[W3C::SOAP::WADL::Document::Resources]',
-    builder    => '_resources',
-    lazy_build => 1,
+add_xpath_namespace wadl => 'http://wadl.dev.java.net/2009/02';
+add_xpath_namespace json => 'http://rest.domain.gdl.optus.com.au/rest/3/common-json';
+
+has_xpath_value target_namespace => './@targetNamespace';
+
+has_xpath_object_list resources => (
+    '//wadl:resources' => 'W3C::SOAP::WADL::Document::Resources',
 );
 
-sub _resources {
-    my ($self) = @_;
-    my @messages;
-    my @nodes = $self->xpc->findnodes('//wadl:resources');
+has module => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_module',
+);
+has module_base => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_module_base',
+);
+has file => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_file',
+);
 
-    for my $node (@nodes) {
-        push @messages, W3C::SOAP::WADL::Document::Resources->new(
-            document => $self,
-            node     => $node,
-        );
-    }
-
-    return \@messages;
-}
-
-around _xpc => sub {
-    my ($orig, $class, @args) = @_;
-
-    my $xpc = $class->$orig(@args);
-    $xpc->registerNs( wadl => 'http://wadl.dev.java.net/2009/02' );
-
-    return $xpc;
-};
+finalize_class();
 
 1;
 

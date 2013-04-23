@@ -6,22 +6,25 @@ package W3C::SOAP::WADL::Document::Param;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use XML::Rabbit;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
+has_xpath_value id => './@id';
+has_xpath_value name => './@name';
+has_xpath_value style => './@style';
+has_xpath_value type => './@type'; # matrix,header,query,template,plain
+has_xpath_value default => './@default'; # value
+#has_xpath_value path => './@path';
+has_xpath_value required => './@required'; # bool
+has_xpath_value repeating => './@repeating'; # bool
+has_xpath_value fixed => './@fixed'; # value
 
+finalize_class();
 
 1;
 

@@ -6,33 +6,22 @@ package W3C::SOAP::WADL::Document::Resources;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use XML::Rabbit;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-
-extends 'W3C::SOAP::WADL::Document::Node';
+use W3C::SOAP::WADL::Document::Resource;
 
 our $VERSION     = version->new('0.0.1');
 
-has base => (
-    is         => 'rw',
-    isa        => 'Str',
-    builder    => '_base',
-    lazy_build => 1,
+has_xpath_value base => './@base';
+
+has_xpath_object_list resource => (
+    './wadl:resource' => 'W3C::SOAP::WADL::Document::Resource',
 );
 
-
-sub _base {
-    my ($self) = @_;
-    my $node = $self->node;
-
-    return $node->getAttribute('base');
-}
+finalize_class();
 
 1;
 
