@@ -9,9 +9,6 @@
 use strict;
 use warnings;
 use version;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Getopt::Long;
 use Pod::Usage;
 use Data::Dumper qw/Dumper/;
@@ -142,7 +139,7 @@ sub show {
         print $wadl->target_namespace, "\n";
         print "Resources :\n";
         for my $node (@{ $wadl->resources }) {
-            print "\t", $node->base, "\n";
+            print "\t", $node->path, "\n";
             print "\tResource :\n";
             for my $node (@{ $node->resource }) {
                 print "\t\t", $node->path, ' (', $node->id, ")\n";
