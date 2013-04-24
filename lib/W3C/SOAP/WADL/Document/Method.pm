@@ -17,7 +17,9 @@ use W3C::SOAP::WADL::Document::Response;
 our $VERSION     = version->new('0.0.1');
 
 has_xpath_value name => './@name';
-has_xpath_value id => './@id';
+has_xpath_value id   => './@id';
+
+has_xpath_value_list doc => './wadl:doc';
 has_xpath_object request => (
     './wadl:request' => 'W3C::SOAP::WADL::Document::Request',
 );

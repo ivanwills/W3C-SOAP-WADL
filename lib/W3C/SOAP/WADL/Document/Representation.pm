@@ -15,8 +15,15 @@ use W3C::SOAP::WADL::Document::Param;
 
 our $VERSION     = version->new('0.0.1');
 
+has_xpath_value id         => './@id';
 has_xpath_value media_type => './@mediaType';
-has_xpath_value json => './@json:serialize';
+has_xpath_value element    => './@element';
+has_xpath_value profile    => './@profile';
+has_xpath_value json       => './@json:serialize';
+
+has_xpath_object_list param => (
+    './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
+);
 
 finalize_class();
 

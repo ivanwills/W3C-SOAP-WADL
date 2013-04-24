@@ -19,9 +19,25 @@ add_xpath_namespace wadl => 'http://wadl.dev.java.net/2009/02';
 add_xpath_namespace json => 'http://rest.domain.gdl.optus.com.au/rest/3/common-json';
 
 has_xpath_value target_namespace => './@targetNamespace';
+has_xpath_value_list doc => './doc';
 
+has_xpath_object grammars => (
+    '//wadl:grammars' => 'W3C::SOAP::WADL::Document::Grammars',
+);
 has_xpath_object_list resources => (
     '//wadl:resources' => 'W3C::SOAP::WADL::Document::Resources',
+);
+has_xpath_object_list resource_type => (
+    '//wadl:resource_type' => 'W3C::SOAP::WADL::Document::ResourceType',
+);
+has_xpath_object_list method => (
+    '//wadl:method' => 'W3C::SOAP::WADL::Document::Method',
+);
+has_xpath_object_list representation => (
+    '//wadl:representation' => 'W3C::SOAP::WADL::Document::Representation',
+);
+has_xpath_object_list param => (
+    '//wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );
 
 has module => (

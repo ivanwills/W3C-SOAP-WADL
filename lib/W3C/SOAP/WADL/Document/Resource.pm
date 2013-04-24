@@ -15,13 +15,20 @@ use W3C::SOAP::WADL::Document::Method;
 
 our $VERSION     = version->new('0.0.1');
 
-has_xpath_value path => './@path';
-has_xpath_value id => './@id';
+has_xpath_value id        => './@id';
+has_xpath_value path      => './@path';
+has_xpath_value type      => './@type';
+has_xpath_value querytype => './@queryType';
+
+has_xpath_value_list doc => './wadl:doc';
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );
 has_xpath_object_list method => (
     './wadl:method' => 'W3C::SOAP::WADL::Document::Method',
+);
+has_xpath_object_list resource => (
+    './wadl:resource' => 'W3C::SOAP::WADL::Document::Resource',
 );
 
 finalize_class();

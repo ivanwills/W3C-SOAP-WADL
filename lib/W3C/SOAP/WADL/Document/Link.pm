@@ -1,6 +1,6 @@
-package W3C::SOAP::WADL::Document::Resources;
+package W3C::SOAP::WADL::Document::Link;
 
-# Created on: 2013-04-22 20:31:26
+# Created on: 2013-04-22 20:57:58
 # Create by:  Ivan Wills
 # $Id$
 # $Revision$, $HeadURL$, $Date$
@@ -11,26 +11,15 @@ use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-use W3C::SOAP::WADL::Document::Resource;
+use W3C::SOAP::WADL::Document::Param;
 
 our $VERSION     = version->new('0.0.1');
 
-has_xpath_value id => './@id';
-has_xpath_value path => './@path';
-has_xpath_value type => './@type';
-has_xpath_value query_type => './@queryType';
+has_xpath_value resource_type => './@resource_type';
+has_xpath_value rel => './@rel';
+has_xpath_value rev => './@rev';
 
-has_xpath_value_list doc => './wadl:doc';
-
-has_xpath_object_list param => (
-    './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
-);
-has_xpath_object_list method => (
-    './wadl:method' => 'W3C::SOAP::WADL::Document::Method',
-);
-has_xpath_object_list resource => (
-    './wadl:resource' => 'W3C::SOAP::WADL::Document::Resource',
-);
+has_xpath_value_list doc => './doc';
 
 finalize_class();
 
@@ -40,16 +29,16 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document::Resources - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Link - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Resources version 0.1.
+This documentation refers to W3C::SOAP::WADL::Document::Link version 0.1.
 
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL::Document::Resources;
+   use W3C::SOAP::WADL::Document::Link;
 
    # Brief but working code example(s) here showing the most common usage(s)
    # This section will be as far as many users bother reading, so make it as

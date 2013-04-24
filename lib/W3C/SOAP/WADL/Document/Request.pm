@@ -15,6 +15,11 @@ use W3C::SOAP::WADL::Document::Param;
 
 our $VERSION     = version->new('0.0.1');
 
+has_xpath_value_list doc => './wadl:doc';
+has_xpath_object_list representation => (
+    './wadl:representation' => 'W3C::SOAP::WADL::Document::Representation',
+    predicate => 'has_representation',
+);
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );
