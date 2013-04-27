@@ -31,7 +31,10 @@ sleep 1;
 my $mech = WWW::Mechanize->new;
 
 try {
+
     my $parser = get_parser();
+    check_dynamic($parser);
+
 }
 catch ($e) {
     ok !$e, 'no errors';
@@ -51,4 +54,15 @@ sub get_parser {
     ok $parser, 'Get a parser object';
 
     return W3C::SOAP::WADL::Parser->new( location => 'http://localhost:4000/wadl' );
+}
+
+sub check_dynamic {
+    my $parser = shift;
+
+    my $class = $parser->dynamic_classes;
+    is $class, 'Dynamic::WADL::Localhost', 'Get an approptiate class name'
+        or diag $class;
+    my $wadl = $class->new;
+    ok $wadl, 'Create new object';
+
 }

@@ -28,7 +28,7 @@ __DATA__
         This service provides basic "ping" functionality which allows the calling
         clients/partners to test their connectivity to the platform.
     </doc>
-    <resources path="http://rest.domain.gdl.optus.com.au/rest/3/service/bis">
+    <resources path="http://localhost:4000/">
         <resource path="ping" id="Ping">
             <method name="GET" id="ping">
                 <doc xml:lang="en" title="Ping">
