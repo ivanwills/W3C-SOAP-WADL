@@ -25,6 +25,7 @@ has_xpath_object request => (
 );
 has_xpath_object_list response => (
     './wadl:response' => 'W3C::SOAP::WADL::Document::Response',
+    predicate => 'has_response',
 );
 
 finalize_class();

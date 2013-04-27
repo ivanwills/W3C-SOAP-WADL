@@ -23,6 +23,7 @@ has_xpath_value json       => './@json:serialize';
 
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
+    predicate => 'has_param',
 );
 
 finalize_class();

@@ -17,6 +17,7 @@ our $VERSION     = version->new('0.0.1');
 
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
+    predicate => 'has_param',
 );
 
 finalize_class();

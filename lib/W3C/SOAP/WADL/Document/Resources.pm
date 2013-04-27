@@ -23,6 +23,7 @@ has_xpath_value query_type => './@queryType';
 has_xpath_value_list doc => './wadl:doc';
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
+    predicate => 'has_param',
 );
 has_xpath_object_list method => (
     './wadl:method' => 'W3C::SOAP::WADL::Document::Method',
