@@ -15,13 +15,12 @@ use W3C::SOAP::WADL::Document::Resource;
 
 our $VERSION     = version->new('0.0.1');
 
-has_xpath_value id => './@id';
-has_xpath_value path => './@path';
-has_xpath_value type => './@type';
+has_xpath_value id         => './@id';
+has_xpath_value path       => './@path|./@base';
+has_xpath_value type       => './@type';
 has_xpath_value query_type => './@queryType';
 
 has_xpath_value_list doc => './wadl:doc';
-
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );

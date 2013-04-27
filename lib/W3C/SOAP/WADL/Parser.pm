@@ -48,9 +48,12 @@ around BUILDARGS => sub {
         : @args == 1 ? $args[0]
         :              {@args};
 
+    # keep the interface the same as other W3C::SOAP parsers but need to
+    # support XML::Rabbits parameters
     $args->{file} = $args->{location} if $args->{location};
+    $args->{xml}  = $args->{string}   if $args->{string};
 
-    $class->$orig($args);
+    return $class->$orig($args);
 };
 
 sub write_modules {
@@ -59,7 +62,7 @@ sub write_modules {
     confess "No module name setup"   if !$self->has_module;
     confess "No template object set" if !$self->has_template;
 
-    my $wsdl = $self->document;
+    my $wadl = $self->document;
     my $template = $self->template;
     my $file     = $self->lib . '/' . $self->module . '.pm';
     $file =~ s{::}{/}g;
