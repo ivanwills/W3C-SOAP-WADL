@@ -6,7 +6,7 @@ package W3C::SOAP::WADL::Traits;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
-use Moose;
+use Moose::Role;
 use version;
 use Carp;
 use Scalar::Util;
@@ -14,14 +14,20 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
-
+use Moose::Util::TypeConstraints;
 
 our $VERSION     = version->new('0.0.1');
 our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
+Moose::Util::meta_attribute_alias('W3C::SOAP::WADL');
 
+has style => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_style',
+);
 
 1;
 

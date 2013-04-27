@@ -14,12 +14,15 @@ use List::Util;
 #use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::Utils qw/ns2module/;
 use W3C::SOAP::WADL::Document;
 use Path::Class;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;
 use W3C::SOAP::XSD;
+use W3C::SOAP::WADL;
+use W3C::SOAP::WADL::Meta::Method;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -80,12 +83,102 @@ sub write_modules {
     warn $self->document->_file;
 }
 
+my %cache;
 sub load_wadl {
-    my ($self) = @_;
+    my ($location) = @_;
+    return $cache{$location} if $cache{$location};
 
+    my $parser = __PACKAGE__->new(
+        location => $location,
+    );
+
+    my $class = $parser->dynamic_classes;
+    return $cache{$location} = $class->new;
 }
 
+sub dynamic_classes {
+    my ($self) = @_;
+    my @classes;
 
+    for my $resources (@{ $self->document->resources }) {
+        warn my $class_name = "Dynamic::WADL::" . ns2module($resources->path);
+        push @classes, $class_name;
+        my %methods;
+
+        for my $resource (@{ $resources->resource }) {
+            for my $method (@{ $resource->method }) {
+                my $request  = $self->build_method_object( $class_name, $resources, $resource, $method, $method->request );
+                my %responses;
+                eval { $method->response };
+                if ( $method->has_response ) {
+                    for my $response (@{ $method->response }) {
+                        $responses{$response->status} = $self->build_method_object( $class_name, $resources, $resource, $method, $response );
+                    }
+                }
+
+                my $name = $resource->path . uc $method->name;
+                $methods{$name} = W3C::SOAP::WADL::Meta::Method->wrap(
+                    body         => sub { shift->_request( $name => @_ ) },
+                    package_name => $class_name,
+                    name         => $name,
+                    request      => $request,
+                    resonce      => \%responses,
+                );
+            }
+        }
+
+        my $class = Moose::Meta::Class->create(
+            $class_name,
+            superclasses => [ 'W3C::SOAP::WADL' ],
+            methods      => \%methods,
+        );
+        $class->add_attribute(
+            '+location',
+            default => $resources->path,
+        );
+    }
+
+    return $classes[0];
+}
+
+sub build_method_object {
+    my ( $self, $base, $resources, $resource, $method, $type ) = @_;
+    my $class_name = $base . '::' . $resource->path . uc $method->name;
+    $class_name .= '::' . $type->status if $type->can('status') && $type->status;
+
+    my $class = Moose::Meta::Class->create(
+        $class_name,
+        superclasses => [ 'W3C::SOAP::WADL::Element' ],
+    );
+
+    $self->add_params( $class, $resources );
+    $self->add_params( $class, $resource );
+    $self->add_params( $class, $type );
+
+    return $class_name;
+}
+
+sub add_params {
+    my ($self, $class, $container) = @_;
+    eval {$container->params};
+
+    if ( $container->has_param ) {
+        for my $param (@{ $container->param }) {
+            $class->add_attribute(
+                $param->name,
+                is            => 'rw',
+                isa           => 'Str', # TODO Get type validation done
+                predicate     => 'has_' . $param->name,
+                required      => $param->required ? 1 : 0,
+                documentation => eval { $param->doc } || '',
+                traits        => [qw{ W3C::SOAP::WADL }],
+                style         => $param->style,
+            );
+        }
+    }
+
+    return;
+}
 
 1;
 
