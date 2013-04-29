@@ -22,6 +22,7 @@ use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;
 use W3C::SOAP::XSD;
 use W3C::SOAP::WADL;
+use W3C::SOAP::WADL::Traits;
 use W3C::SOAP::WADL::Meta::Method;
 
 Moose::Exporter->setup_import_methods(
@@ -101,7 +102,7 @@ sub dynamic_classes {
     my @classes;
 
     for my $resources (@{ $self->document->resources }) {
-        warn my $class_name = "Dynamic::WADL::" . ns2module($resources->path);
+        my $class_name = "Dynamic::WADL::" . ns2module($resources->path);
         push @classes, $class_name;
         my %methods;
 
@@ -116,13 +117,15 @@ sub dynamic_classes {
                     }
                 }
 
-                my $name = $resource->path . uc $method->name;
+                my $name = $resource->path . '_' . uc $method->name;
                 $methods{$name} = W3C::SOAP::WADL::Meta::Method->wrap(
                     body         => sub { shift->_request( $name => @_ ) },
                     package_name => $class_name,
                     name         => $name,
+                    path         => $resource->path,
+                    method       => $method->name,
                     request      => $request,
-                    resonce      => \%responses,
+                    response     => \%responses,
                 );
             }
         }
@@ -160,19 +163,23 @@ sub build_method_object {
 
 sub add_params {
     my ($self, $class, $container) = @_;
-    eval {$container->params};
+    eval {$container->param};
 
     if ( $container->has_param ) {
         for my $param (@{ $container->param }) {
+            my $name = $param->name;
+            $name =~ s/\W/_/g;
+
             $class->add_attribute(
-                $param->name,
+                $name,
                 is            => 'rw',
                 isa           => 'Str', # TODO Get type validation done
-                predicate     => 'has_' . $param->name,
-                required      => $param->required ? 1 : 0,
+                predicate     => 'has_' . $name,
+                required      => $param->required && $param->required eq 'true' ? 1 : 0,
                 documentation => eval { $param->doc } || '',
                 traits        => [qw{ W3C::SOAP::WADL }],
                 style         => $param->style,
+                real_name     => $param->name,
             );
         }
     }

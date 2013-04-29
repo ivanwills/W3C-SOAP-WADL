@@ -16,8 +16,8 @@ our $VERSION     = version->new('0.0.1');
 
 has_xpath_value id => './@id';
 has_xpath_value name => './@name';
-has_xpath_value style => './@style';
-has_xpath_value type => './@type'; # matrix,header,query,template,plain
+has_xpath_value style => './@style';     # template,query,header,matrix
+has_xpath_value type => './@type';       # matrix,header,query,template,plain
 has_xpath_value default => './@default'; # value
 #has_xpath_value path => './@path';
 has_xpath_value required => './@required'; # bool

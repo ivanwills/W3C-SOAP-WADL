@@ -8,6 +8,7 @@ use Path::Class;
 use W3C::SOAP::WADL::Parser;
 use WWW::Mechanize;
 use TryCatch;
+use Data::Dumper qw/Dumper/;
 
 my $app = file($0)->parent->file('app.pl');
 
@@ -65,4 +66,13 @@ sub check_dynamic {
     my $wadl = $class->new;
     ok $wadl, 'Create new object';
 
+    my $ping = $wadl->ping_GET(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+    );
+    ok $ping, 'Get ping response';
+    is $ping->X_Response_ID, 0, 'Get response id';
+    is $ping->I_Response_ID, 1, 'Get response id';
 }

@@ -28,6 +28,11 @@ has style => (
     isa       => 'Str',
     predicate => 'has_style',
 );
+has real_name => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_real_name',
+);
 
 1;
 

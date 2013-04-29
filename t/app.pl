@@ -10,9 +10,22 @@ get '/wadl' => sub {
     $self->render('wadl');
 };
 
+my $x_r = 0;
+my $i_r = 1;
+get '/ping' => sub {
+    my ($self) = @_;
+
+    $self->res->headers->header('X-Response-ID', $x_r++);
+    $self->res->headers->header('I-Response-ID', $i_r++);
+    $self->render('wadl');
+};
+
 app->start;
 
 __DATA__
+
+@@ ping.json.ep
+{"message":"pong"}
 
 @@ wadl.html.ep
 <?xml version="1.0" encoding="UTF-8"?>

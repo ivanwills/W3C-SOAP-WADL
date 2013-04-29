@@ -8,7 +8,7 @@ package W3C::SOAP::WADL::Element;
 
 use Moose;
 use version;
-use Carp;
+use Carp qw/carp croak cluck confess longmess/;
 use Scalar::Util;
 use List::Util;
 #use List::MoreUtils;
@@ -21,7 +21,99 @@ our @EXPORT_OK   = qw//;
 our %EXPORT_TAGS = ();
 #our @EXPORT      = qw//;
 
-sub _request {
+around BUILDARGS => sub {
+    my ($orig, $class, @args) = @_;
+    my $args
+        = !@args     ? {}
+        : @args == 1 ? $args[0]
+        :              {@args};
+
+    if ( blessed $args && ( $args->isa('HTTP::Request') || $args->isa('HTTP::Response') ) ) {
+        my $http = $args;
+        my $uri  = $http->can('uri') ? $http->uri : undef;
+        $args = {};
+
+        my %map = $class->_map_fields;
+
+        # process headers
+        for my $header ( $http->header_field_names ) {
+            $args->{ $map{$header} } = $http->header($header) if $map{$header};
+        }
+
+        # process URI params
+        if ( $uri ) {
+            my @query = $uri->query_form;
+            while ( my $key = shift @query ) {
+                my $value = shift @query;
+                # TODO make work with multiple values
+                $args->{ $map{$key} } = $value;
+            }
+        }
+    }
+
+    return $class->$orig($args);
+};
+
+sub _map_fields {
+    my ($self) = @_;
+    my $meta = $self->meta;
+
+    my @parent_nodes;
+    my @supers = $meta->superclasses;
+    for my $super (@supers) {
+        push @parent_nodes, $super->_map_fields
+            if $super ne __PACKAGE__ && UNIVERSAL::can($super, '_map_fields');
+    }
+
+    return @parent_nodes, map {
+            $meta->get_attribute($_)->real_name => $_
+        }
+        grep {
+            $meta->get_attribute($_)->does('W3C::SOAP::WADL::Traits')
+        }
+        $meta->get_attribute_list;
+}
+
+sub _get_headers {
+    my ($self) = @_;
+    my $meta = $self->meta;
+    my %headers;
+
+    for my $name ( $meta->get_attribute_list ) {
+        my $attr = $meta->get_attribute($name);
+        next if !$attr->style eq 'header';
+
+        my $has = 'has_' . $name;
+        next if !$self->$has;
+
+        $headers{$attr->real_name} = $self->$name;
+    }
+
+    return %headers;
+}
+
+my $urlencode = sub {
+    my $url = shift;
+    $url =~ s/(\W)/sprintf('%%%x',ord($1))/eg;
+    return $url;
+};
+sub _get_query {
+    my ($self) = @_;
+    my $meta = $self->meta;
+    my %query;
+
+    for my $name ( $meta->get_attribute_list ) {
+        my $attr = $meta->get_attribute($name);
+        next if !$attr->style eq 'query';
+
+        my $has = 'has_' . $name;
+        next if !$self->$has;
+
+        $query{ $urlencode->( $attr->real_name )} = $urlencode->( $self->$name );
+        $query{$attr->real_name} = $self->$name;
+    }
+
+    return wantarray ? %query : join '&', map { "$_=$query{$_}"} keys %query;
 }
 
 1;

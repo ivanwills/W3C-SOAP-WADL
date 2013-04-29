@@ -9,18 +9,85 @@ package W3C::SOAP::WADL;
 use Moose;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use TryCatch;
 
 extends 'W3C::SOAP::Client';
 
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
+
+sub _request {
+    my ( $self, $method_name, @params ) = @_;
+    my $method = $self->_get_method($method_name);
+
+    my $uri = $self->_get_uri($method);
+    my $http_request = HTTP::Request->new( $method->method, $uri );
+    my $request = $method->has_request ? $method->request : '';
+    if ( $request ) {
+        my $object = $request->new(@params);
+        # split the object into components
+
+        my %headers = $object->_get_headers;
+        for my $header ( keys %headers ) {
+            $http_request->header( $header, $headers{$header} );
+        }
+
+        if ( $method->method eq 'GET' ) {
+            $http_request->uri( $uri . '?' . $object->_get_query );
+        }
+        else {
+            $http_request->content( scalar $object->_get_query );
+        }
+    }
+
+    my $mech     = $self->mech;
+    my $response = $method->response;
+
+    try {
+        $mech->request( $http_request );
+    }
+    catch ($e) {
+        if ( !$response->{ $mech->res->code } ) {
+            $self->log->error( "Unknown response code '" . $mech->res->code . "'! $e\n" ) if $self->has_log;
+            confess "Unknown response code '" . $mech->res->code . "'! $e\n";
+        }
+    }
+
+    if ( !$response->{ $mech->res->code } ) {
+        # unhandled codes
+        $self->log->error( "Unknown response code '" . $mech->res->code . "'!\n" ) if $self->has_log;
+        confess "Unknown response code '" . $mech->res->code . "'!\n";
+    }
+
+    my $res_class = $response->{ $mech->res->code };
+    return $res_class->new( $mech->res );
+}
+
+sub _get_uri {
+    my ($self, $method) = @_;
+
+    my $uri = $self->location;
+    $uri =~ s{/$}{};
+    $uri .= '/' . $method->path;
+
+    return $uri;
+}
+
+sub _get_method {
+    my ($self, $name) = @_;
+
+    my $method = $self->meta->get_method($name);
+    return $method if $method && $method->meta->name eq 'W3C::SOAP::WADL::Meta::Method';
+
+    for my $super ( $self->meta->superclasses ) {
+        next unless $super->can('_get_method');
+        $method = $super->_get_method($name);
+        return $method if $method && $method->meta->name eq 'W3C::SOAP::WADL::Meta::Method';
+    }
+
+    confess "Could not find any methods called $name in $self!";
+}
 
 1;
 

@@ -20,6 +20,23 @@ extends 'Moose::Meta::Method';
 
 our $VERSION     = version->new('0.0.7');
 
+has name => (
+    is        => 'rw',
+    isa       => 'Str',
+    predicate => 'has_name',
+);
+has path => (
+    is        => 'rw',
+    isa       => 'Str',
+    required  => 1,
+    predicate => 'has_path',
+);
+has method => (
+    is        => 'rw',
+    isa       => 'Str',
+    required  => 1,
+    predicate => 'has_method',
+);
 has request => (
     is        => 'rw',
     isa       => 'Str',
