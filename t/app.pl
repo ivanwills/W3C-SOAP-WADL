@@ -17,7 +17,14 @@ get '/ping' => sub {
 
     $self->res->headers->header('X-Response-ID', $x_r++);
     $self->res->headers->header('I-Response-ID', $i_r++);
-    $self->render('wadl');
+    $self->render_json({message => 'get'});
+};
+post '/ping' => sub {
+    my ($self) = @_;
+
+    $self->res->headers->header('X-Response-ID', $x_r++);
+    $self->res->headers->header('Response-ID', $i_r++);
+    $self->render_json({message => 'post'});
 };
 
 app->start;
