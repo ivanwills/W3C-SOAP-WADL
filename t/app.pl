@@ -24,7 +24,28 @@ post '/ping' => sub {
 
     $self->res->headers->header('X-Response-ID', $x_r++);
     $self->res->headers->header('Response-ID', $i_r++);
-    $self->render_json({message => 'post'});
+
+    if ( !$self->req->headers->{'I-Status'} ) {
+        $self->render(json => {message => 'post'}, status => 200 );
+    }
+    elsif ( $self->req->headers->{'I-Status'} == 400 ) {
+        $self->render(status => 400 );
+    }
+    elsif ( $self->req->headers->{'I-Status'} == 401 ) {
+        $self->types->type( multi => "x-application-urlencoded" );
+        $self->render(text => "multi=true", format => 'multi', status => 401 );
+    }
+    elsif ( $self->req->headers->{'I-Status'} == 402 ) {
+        $self->types->type( form => "application/x-www-form-urlencoded" );
+        $self->render(text => "multi=true&form=1", format => 'form', status => 402 );
+    }
+    elsif ( $self->req->headers->{'I-Status'} == 403 ) {
+        $self->types->type( url => "multipart/form-data" );
+        $self->render(text => "multi=true&form=1&url=u", format => 'url', status => 403 );
+    }
+    else {
+        $self->render(json => {message => 'post'}, status => 200 );
+    }
 };
 
 app->start;
@@ -88,6 +109,7 @@ __DATA__
                     <param name="I-Request-ID"             style="header" type="xs:string" required="false"/>
                     <param name="I-Correlation-Request-ID" style="header" type="xs:string" required="false"/>
                     <param name="I-Partner-ID"             style="header" type="xs:string" required="false"/>
+                    <param name="I-Status"                 style="header" type="xs:string" required="false"/>
                     <representation mediaType="application/json"
                         json:serialize="au.com.optus.gdl.rest.domain.v3.service.ping.dto.PingRequest"/>
                 </request>
@@ -100,6 +122,25 @@ __DATA__
                         json:serialize="au.com.optus.gdl.rest.domain.v3.service.ping.dto.PingResponse"/>
                 </response>
                 <response status="400"/>
+                <response status="401">
+                    <representation mediaType="x-application-urlencoded">
+                        <param name="multi" style="query" type="xs:string" required="true" />
+                    </representation>
+                </response>
+                <response status="402">
+                    <representation mediaType="application/x-www-form-urlencoded">
+                        <param name="form" style="query" type="xs:string" required="true" />
+                    </representation>
+                </response>
+                <response status="403">
+                    <representation mediaType="multipart/form-data">
+                        <param name="url" style="query" type="xs:string" required="true" />
+                    </representation>
+                </response>
+                <response status="412">
+                    <representation mediaType="application/json"
+                        json:serialize="au.com.optus.gdl.rest.domain.v3.service.ping.dto.PingResponse"/>
+                </response>
             </method>
 
         </resource>

@@ -85,4 +85,44 @@ sub check_dynamic {
     ok $ping, 'Get ping response';
     is $ping->X_Response_ID, 1, 'Get response id';
     is $ping->Response_ID, 2, 'Get response id';
+
+    $ping = $wadl->ping_POST(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+        'I_Status'           => 400,
+    );
+    ok $ping, 'Get ping 400 response';
+
+    $ping = $wadl->ping_POST(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+        'I_Status'           => 401,
+    );
+    ok $ping, 'Get ping 400 response';
+    is $ping->multi, 'true', 'Get multi param';
+
+    $ping = $wadl->ping_POST(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+        'I_Status'           => 402,
+    );
+    ok $ping, 'Get ping 400 response';
+    is $ping->form, '1', 'Get form param';
+
+    $ping = $wadl->ping_POST(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+        'I_Status'           => 403,
+    );
+    ok $ping, 'Get ping 400 response';
+    is $ping->url, 'u', 'Get url param';
+
 }
