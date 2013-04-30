@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use Mojolicious::Lite;
+use Data::Dumper qw/Dumper/;
 
 # This is a test script of a dynamic wadl
 
@@ -25,26 +26,33 @@ post '/ping' => sub {
     $self->res->headers->header('X-Response-ID', $x_r++);
     $self->res->headers->header('Response-ID', $i_r++);
 
-    if ( !$self->req->headers->{'I-Status'} ) {
+    my $status = $self->req->headers->{headers}{'i-status'}[0][0];
+    if ( !$status ) {
+        warn 1;
         $self->render(json => {message => 'post'}, status => 200 );
     }
-    elsif ( $self->req->headers->{'I-Status'} == 400 ) {
-        $self->render(status => 400 );
+    elsif ( $status == 400 ) {
+        warn 2;
+        $self->render(text => '', status => 400 );
     }
-    elsif ( $self->req->headers->{'I-Status'} == 401 ) {
-        $self->types->type( multi => "x-application-urlencoded" );
+    elsif ( $status == 401 ) {
+        warn 3;
+        $self->app->types->type( multi => "x-application-urlencoded" );
         $self->render(text => "multi=true", format => 'multi', status => 401 );
     }
-    elsif ( $self->req->headers->{'I-Status'} == 402 ) {
-        $self->types->type( form => "application/x-www-form-urlencoded" );
+    elsif ( $status == 402 ) {
+        warn 4;
+        $self->app->types->type( form => "application/x-www-form-urlencoded" );
         $self->render(text => "multi=true&form=1", format => 'form', status => 402 );
     }
-    elsif ( $self->req->headers->{'I-Status'} == 403 ) {
-        $self->types->type( url => "multipart/form-data" );
+    elsif ( $status == 403 ) {
+        warn 5;
+        $self->app->types->type( url => "multipart/form-data" );
         $self->render(text => "multi=true&form=1&url=u", format => 'url', status => 403 );
     }
     else {
-        $self->render(json => {message => 'post'}, status => 200 );
+        warn 6;
+        $self->render(json => {message => 'post'}, status => 300 );
     }
 };
 

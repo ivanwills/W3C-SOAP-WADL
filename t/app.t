@@ -54,19 +54,15 @@ sub get_parser {
     my $parser = W3C::SOAP::WADL::Parser->new( string => $wadl );
     ok $parser, 'Get a parser object';
 
-    return W3C::SOAP::WADL::Parser->new( location => 'http://localhost:4000/wadl' );
+    return W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' );
 }
 
 sub check_dynamic {
-    my $parser = shift;
+    my $wadl = shift;
 
-    my $class = $parser->dynamic_classes;
-    is $class, 'Dynamic::WADL::Localhost', 'Get an approptiate class name'
-        or diag $class;
-    my $wadl = $class->new;
     ok $wadl, 'Create new object';
 
-    my $ping = $wadl->ping_GET(
+    my ($res, $ping) = $wadl->ping_GET(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
@@ -76,7 +72,7 @@ sub check_dynamic {
     is $ping->X_Response_ID, 0, 'Get response id';
     is $ping->I_Response_ID, 1, 'Get response id';
 
-    $ping = $wadl->ping_POST(
+    ($res, $ping) = $wadl->ping_POST(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
@@ -86,7 +82,7 @@ sub check_dynamic {
     is $ping->X_Response_ID, 1, 'Get response id';
     is $ping->Response_ID, 2, 'Get response id';
 
-    $ping = $wadl->ping_POST(
+    ($res, $ping) = $wadl->ping_POST(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
@@ -95,34 +91,34 @@ sub check_dynamic {
     );
     ok $ping, 'Get ping 400 response';
 
-    $ping = $wadl->ping_POST(
+    ($res, $ping) = $wadl->ping_POST(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
         'X_Partner_ID'       => 'test',
         'I_Status'           => 401,
     );
-    ok $ping, 'Get ping 400 response';
-    is $ping->multi, 'true', 'Get multi param';
+    ok $ping, 'Get ping 401 response';
+    is $res->{multi}, 'true', 'Get multi param';
 
-    $ping = $wadl->ping_POST(
+    ($res, $ping) = $wadl->ping_POST(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
         'X_Partner_ID'       => 'test',
         'I_Status'           => 402,
     );
-    ok $ping, 'Get ping 400 response';
-    is $ping->form, '1', 'Get form param';
+    ok $ping, 'Get ping 402 response';
+    is $res->{form}, '1', 'Get form param';
 
-    $ping = $wadl->ping_POST(
+    ($res, $ping) = $wadl->ping_POST(
         'X_Request_ID'       => 1,
         'X_Request_DateTime' => 'now',
         'X_Request_TimeZone' => 'Z',
         'X_Partner_ID'       => 'test',
         'I_Status'           => 403,
     );
-    ok $ping, 'Get ping 400 response';
-    is $ping->url, 'u', 'Get url param';
+    ok $ping, 'Get ping 403 response';
+    is $res->{url}, 'u', 'Get url param';
 
 }
