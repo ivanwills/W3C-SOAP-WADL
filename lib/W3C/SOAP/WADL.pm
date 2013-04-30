@@ -17,6 +17,11 @@ extends 'W3C::SOAP::Client';
 
 our $VERSION     = version->new('0.0.1');
 
+has _response => (
+    is  => 'rw',
+    isa => 'Any',
+);
+
 sub _request {
     my ( $self, $method_name, @params ) = @_;
     my $method = $self->_get_method($method_name);
@@ -61,7 +66,22 @@ sub _request {
     }
 
     my $res_class = $response->{ $mech->res->code };
-    return $res_class->new( $mech->res );
+    my $object  = $res_class->new( $mech->res );
+    $self->_response($object);
+
+    my $content = $mech->res->content;
+    if ( $object->has_representations ) {
+        my $rep = $object->_representations->{ $mech->res->headers->content_type };
+        if ( $rep ) {
+            $content = $rep->{parser} ? $rep->{parser}->( $content ) : $content;
+            if ( $rep->{class} ) {
+                my $class = $rep->{class};
+                $content = $class->new($content);
+            }
+        }
+    }
+
+    return wantarray ? ( $content, $object ) : $content;
 }
 
 sub _get_uri {

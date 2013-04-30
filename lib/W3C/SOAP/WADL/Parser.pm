@@ -24,6 +24,8 @@ use W3C::SOAP::XSD;
 use W3C::SOAP::WADL;
 use W3C::SOAP::WADL::Traits;
 use W3C::SOAP::WADL::Meta::Method;
+use MooseX::Types::Moose qw/Str Int HashRef/;
+use JSON qw/decode_json/;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -109,11 +111,19 @@ sub dynamic_classes {
         for my $resource (@{ $resources->resource }) {
             for my $method (@{ $resource->method }) {
                 my $request  = $self->build_method_object( $class_name, $resources, $resource, $method, $method->request );
+
                 my %responses;
                 eval { $method->response };
                 if ( $method->has_response ) {
                     for my $response (@{ $method->response }) {
-                        $responses{$response->status} = $self->build_method_object( $class_name, $resources, $resource, $method, $response );
+                        $responses{$response->status}
+                            = $self->build_method_object(
+                                $class_name,
+                                $resources,
+                                $resource,
+                                $method,
+                                $response,
+                            );
                     }
                 }
 
@@ -157,6 +167,7 @@ sub build_method_object {
     $self->add_params( $class, $resources );
     $self->add_params( $class, $resource );
     $self->add_params( $class, $type );
+    $self->add_representations( $class, $class_name, $type );
 
     return $class_name;
 }
@@ -173,7 +184,7 @@ sub add_params {
             $class->add_attribute(
                 $name,
                 is            => 'rw',
-                isa           => 'Str', # TODO Get type validation done
+                isa           => Str, # TODO Get type validation done
                 predicate     => 'has_' . $name,
                 required      => $param->required && $param->required eq 'true' ? 1 : 0,
                 documentation => eval { $param->doc } || '',
@@ -183,6 +194,62 @@ sub add_params {
             );
         }
     }
+
+    return;
+}
+
+sub add_representations {
+    my ( $self, $class, $base, $type ) = @_;
+    my %rep_map;
+
+    eval { $type->representation };
+    if ( $type->has_representation ) {
+        for my $rep (@{ $type->representation }) {
+            eval { $rep->media_type };
+            $rep->media_type('text/plain') unless $rep->media_type;
+
+            my $type = $rep->media_type;
+            $type =~ s/\W/_/g;
+            my $class_name = $base . '::' . $type;
+
+            if ( $rep->media_type eq 'application/json' ) {
+                # try to determine XML object or whatever
+                $rep_map{ $rep->media_type } = {
+                    parser => sub { decode_json(shift); },
+                };
+            }
+            elsif ( $rep->media_type eq 'text/xml' || $rep->media_type eq 'application/xml' ) {
+                # get xml element object
+                $rep_map{ $rep->media_type } = {
+                    parser => sub { XML::LibXML->load_xml( string => shift ) },
+                };
+            }
+            elsif (
+                $rep->media_type eq 'x-application-urlencoded'
+                || $rep->media_type eq 'application/x-www-form-urlencoded'
+                || $rep->media_type eq 'multipart/form-data'
+            ) {
+                # get xml element object
+                $rep_map{ $rep->media_type } = {
+                    parser => sub {
+                        return { map { (split /=/, $_) } split /&/, shift };
+                    },
+                };
+            }
+            else {
+                $rep_map{ $rep->media_type } = undef;
+            }
+        }
+    }
+
+    # Add the representations as semi constant
+    $class->add_attribute(
+        '_representations',
+        is        => 'ro',
+        isa       => HashRef,
+        predicate => 'has_representations',
+        default   => sub { \%rep_map },
+    );
 
     return;
 }
@@ -211,66 +278,30 @@ This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
-
 =head1 SUBROUTINES/METHODS
 
-A separate section listing the public components of the module's interface.
+=head2 write_modules
 
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
+=head2 load_wadl
 
-Name the section accordingly.
+=head2 dynamic_classes
 
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
+=head2 build_method_object
 
+=head2 add_params
 
+=head2 add_representations
 
 
 =head1 DIAGNOSTICS
 
-A list of every error and warning message that the module can generate (even
-the ones that will "never happen"), with a full explanation of each problem,
-one or more likely causes, and any suggested remedies.
-
 =head1 CONFIGURATION AND ENVIRONMENT
-
-A full explanation of any configuration system(s) used by the module, including
-the names and locations of any configuration files, and the meaning of any
-environment variables or properties that can be set. These descriptions must
-also include details of any configuration language used.
 
 =head1 DEPENDENCIES
 
-A list of all of the other modules that this module relies upon, including any
-restrictions on versions, and an indication of whether these required modules
-are part of the standard Perl distribution, part of the module's distribution,
-or must be installed separately.
-
 =head1 INCOMPATIBILITIES
 
-A list of any modules that this module cannot be used in conjunction with.
-This may be due to name conflicts in the interface, or competition for system
-or program resources, or due to internal limitations of Perl (for example, many
-modules that use source code filters are mutually incompatible).
-
 =head1 BUGS AND LIMITATIONS
-
-A list of known problems with the module, together with some indication of
-whether they are likely to be fixed in an upcoming release.
-
-Also, a list of restrictions on the features the module does provide: data types
-that cannot be handled, performance issues and the circumstances in which they
-may arise, practical limitations on the size of data sets, special cases that
-are not (yet) handled, etc.
-
-The initial template usually just has:
 
 There are no known bugs in this module.
 

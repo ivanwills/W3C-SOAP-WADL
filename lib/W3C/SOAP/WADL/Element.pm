@@ -81,6 +81,7 @@ sub _get_headers {
 
     for my $name ( $meta->get_attribute_list ) {
         my $attr = $meta->get_attribute($name);
+        next if !$attr->does('W3C::SOAP::WADL');
         next if !$attr->style eq 'header';
 
         my $has = 'has_' . $name;
@@ -104,6 +105,7 @@ sub _get_query {
 
     for my $name ( $meta->get_attribute_list ) {
         my $attr = $meta->get_attribute($name);
+        next if !$attr->does('W3C::SOAP::WADL');
         next if !$attr->style eq 'query';
 
         my $has = 'has_' . $name;
