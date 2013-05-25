@@ -50,6 +50,11 @@ post '/ping' => sub {
         $self->app->types->type( url => "multipart/form-data" );
         $self->render(text => "multi=true&form=1&url=u", format => 'url', status => 403 );
     }
+    elsif ( $status == 404 ) {
+        warn 5;
+        $self->app->types->type( xml => "text/xml" );
+        $self->render(text => "<xml>text</xml>", format => 'xml', status => 404 );
+    }
     else {
         warn 6;
         $self->render(json => {message => 'post'}, status => 300 );
@@ -145,9 +150,15 @@ __DATA__
                         <param name="url" style="query" type="xs:string" required="true" />
                     </representation>
                 </response>
+                <response status="404">
+                    <representation mediaType="text/xml" />
+                </response>
                 <response status="412">
                     <representation mediaType="application/json"
                         json:serialize="au.com.optus.gdl.rest.domain.v3.service.ping.dto.PingResponse"/>
+                </response>
+                <response status="412">
+                    <representation mediaType="application/xml"/>
                 </response>
             </method>
 

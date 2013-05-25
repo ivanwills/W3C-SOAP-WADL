@@ -181,12 +181,13 @@ sub add_params {
             my $name = $param->name;
             $name =~ s/\W/_/g;
 
+            my $required = !!( ( $param->required || '' ) eq 'true' );
             $class->add_attribute(
                 $name,
                 is            => 'rw',
                 isa           => Str, # TODO Get type validation done
                 predicate     => 'has_' . $name,
-                required      => $param->required && $param->required eq 'true' ? 1 : 0,
+                required      => $required,
                 documentation => eval { $param->doc } || '',
                 traits        => [qw{ W3C::SOAP::WADL }],
                 style         => $param->style,
@@ -208,26 +209,24 @@ sub add_representations {
             eval { $rep->media_type };
             $rep->media_type('text/plain') unless $rep->media_type;
 
-            my $type = $rep->media_type;
-            $type =~ s/\W/_/g;
-            my $class_name = $base . '::' . $type;
+            my $type = lc $rep->media_type;
 
-            if ( $rep->media_type eq 'application/json' ) {
+            if ( $type eq 'application/json' ) {
                 # try to determine XML object or whatever
                 $rep_map{ $rep->media_type } = {
                     parser => sub { decode_json(shift); },
                 };
             }
-            elsif ( $rep->media_type eq 'text/xml' || $rep->media_type eq 'application/xml' ) {
+            elsif ( $type eq 'text/xml' || $type eq 'application/xml' ) {
                 # get xml element object
                 $rep_map{ $rep->media_type } = {
                     parser => sub { XML::LibXML->load_xml( string => shift ) },
                 };
             }
             elsif (
-                $rep->media_type eq 'x-application-urlencoded'
-                || $rep->media_type eq 'application/x-www-form-urlencoded'
-                || $rep->media_type eq 'multipart/form-data'
+                $type eq 'x-application-urlencoded'
+                || $type eq 'application/x-www-form-urlencoded'
+                || $type eq 'multipart/form-data'
             ) {
                 # get xml element object
                 $rep_map{ $rep->media_type } = {

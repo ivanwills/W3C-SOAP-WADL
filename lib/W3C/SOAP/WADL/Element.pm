@@ -28,7 +28,9 @@ around BUILDARGS => sub {
         : @args == 1 ? $args[0]
         :              {@args};
 
-    if ( blessed $args && ( $args->isa('HTTP::Request') || $args->isa('HTTP::Response') ) ) {
+    if ( blessed $args
+        && ( $args->isa('HTTP::Request') || $args->isa('HTTP::Response') )
+    ) {
         my $http = $args;
         my $uri  = $http->can('uri') ? $http->uri : undef;
         $args = {};
@@ -37,7 +39,15 @@ around BUILDARGS => sub {
 
         # process headers
         for my $header ( $http->header_field_names ) {
-            $args->{ $map{$header} } = $http->header($header) if $map{$header};
+            if ( $map{$header} ) {
+                $args->{ $map{$header} } = $http->header($header);
+            }
+            elsif ( $map{lc $header} ) {
+                $args->{ $map{lc $header} } = $http->header($header);
+            }
+            else {
+                $args->{$header} = $http->header($header);
+            }
         }
 
         # process URI params
@@ -66,7 +76,8 @@ sub _map_fields {
     }
 
     return @parent_nodes, map {
-            $meta->get_attribute($_)->real_name => $_
+            $meta->get_attribute($_)->real_name => $_,
+            lc $meta->get_attribute($_)->real_name => $_
         }
         grep {
             $meta->get_attribute($_)->does('W3C::SOAP::WADL::Traits')

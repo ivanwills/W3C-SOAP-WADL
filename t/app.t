@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use v5.12;
 use Test::More;
 use Path::Class;
 use W3C::SOAP::WADL::Parser;
@@ -20,10 +19,10 @@ if ( !defined $pid ) {
 }
 elsif ( !$pid ) {
     # Keep test output clean by hiding server details
-    #close STDERR;
-    #open STDERR, '>', '/dev/null';
-    #close STDOUT;
-    #open STDOUT, '>', '/dev/null';
+    close STDERR;
+    open STDERR, '>', '/dev/null';
+    close STDOUT;
+    open STDOUT, '>', '/dev/null';
 
     exec $app, 'daemon', '--listen', 'http://*:4000';
 }
@@ -54,7 +53,11 @@ sub get_parser {
     my $parser = W3C::SOAP::WADL::Parser->new( string => $wadl );
     ok $parser, 'Get a parser object';
 
-    return W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' );
+    my $orig = W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' );
+
+    is $orig, W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' ), 'Values are cached';
+
+    return $orig;
 }
 
 sub check_dynamic {
@@ -121,4 +124,14 @@ sub check_dynamic {
     ok $ping, 'Get ping 403 response';
     is $res->{url}, 'u', 'Get url param';
 
+    ($res, $ping) = $wadl->ping_POST(
+        'X_Request_ID'       => 1,
+        'X_Request_DateTime' => 'now',
+        'X_Request_TimeZone' => 'Z',
+        'X_Partner_ID'       => 'test',
+        'I_Status'           => 404,
+    );
+    ok $ping, 'Get ping 404 response';
+    ok ref $res, 'get xml back'
+        or diag Dumper $res, $ping;
 }

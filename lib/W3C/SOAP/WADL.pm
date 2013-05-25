@@ -30,14 +30,18 @@ sub _request {
     my $http_request = HTTP::Request->new( $method->method, $uri );
     my $request = $method->has_request ? $method->request : '';
     if ( $request ) {
-        my $object = $request->new(@params);
-        # split the object into components
 
+        # build the request object
+        my $object = $request->new(@params);
+
+        # split the object into its components
+        # Headers
         my %headers = $object->_get_headers;
         for my $header ( keys %headers ) {
             $http_request->header( $header, $headers{$header} );
         }
 
+        # GET or body parameters
         if ( $method->method eq 'GET' ) {
             $http_request->uri( $uri . '?' . $object->_get_query );
         }
@@ -46,32 +50,32 @@ sub _request {
         }
     }
 
-    my $mech     = $self->mech;
+    my $ua       = $self->ua;
     my $response = $method->response;
 
-    try {
-        $mech->request( $http_request );
-    }
-    catch ($e) {
-        if ( !$response->{ $mech->res->code } ) {
-            $self->log->error( "Unknown response code '" . $mech->res->code . "'! $e\n" ) if $self->has_log;
-            confess "Unknown response code '" . $mech->res->code . "'! $e\n";
-        }
+    $self->clear_response;
+    my $http_response = $ua->request( $http_request );
+    $self->response($http_response);
+
+    if ( !$response->{ $http_response->code } ) {
+        my $msg = "Unknown response code '" . $http_response->code . "'!\n";
+        $self->log->error($msg) if $self->has_log;
+        confess $msg;
     }
 
-    if ( !$response->{ $mech->res->code } ) {
+    if ( !$response->{ $http_response->code } ) {
         # unhandled codes
-        $self->log->error( "Unknown response code '" . $mech->res->code . "'!\n" ) if $self->has_log;
-        confess "Unknown response code '" . $mech->res->code . "'!\n";
+        $self->log->error( "Unknown response code '" . $http_response->code . "'!\n" ) if $self->has_log;
+        confess "Unknown response code '" . $http_response->code . "'!\n";
     }
 
-    my $res_class = $response->{ $mech->res->code };
-    my $object  = $res_class->new( $mech->res );
+    my $res_class = $response->{ $http_response->code };
+    my $object  = $res_class->new( $http_response );
     $self->_response($object);
 
-    my $content = $mech->res->content;
+    my $content = $http_response->content;
     if ( $object->has_representations ) {
-        my $rep = $object->_representations->{ $mech->res->headers->content_type };
+        my $rep = $object->_representations->{ $http_response->headers->content_type };
         if ( $rep ) {
             $content = $rep->{parser} ? $rep->{parser}->( $content ) : $content;
             if ( $rep->{class} ) {
