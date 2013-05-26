@@ -32,10 +32,21 @@ my $builder = Module::Build->new(
         'Test::NoWarnings'  => 0,
         'Mojolicious::Lite' => 0,
     },
+    recommends => {
+        'Test::Spelling'     => 0,
+        'Test::Perl::Critic' => 0,
+        'Test::Kwalitee'     => 0,
+        'Pod::Coverage'      => 0,
+    },
+    share_dir => {
+        dist => [
+            'templates',
+        ],
+    },
     add_to_cleanup     => [ 'W3C-SOAP-WADL-*' ],
     create_makefile_pl => 'traditional',
     create_license     => 1,
-    meta_merge => {
+    meta_merge         => {
         resources => {
             repository => 'git://github.com/ivanwills/W3C-SOAP-WADL.git',
             bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=W3C::SOAP::WADL',

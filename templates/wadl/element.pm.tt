@@ -1,0 +1,54 @@
+[% PROCESS config.tt -%]
+package [% module %];
+
+# Created on: [% date %] [% time %]
+# Create by:  [% user %]
+# $Id$
+# $Revision$, $HeadURL$, $Date$
+# $Revision$, $Source$, $Date$
+
+use Moose;
+use warnings;
+use version;
+use namespace::autoclean;
+use Data::Dumper qw/Dumper/;
+use W3C::SOAP::Utils;
+
+extends 'W3C::SOAP::WADL::Element';
+
+our $VERSION = version->new('0.0.1');
+
+
+__PACKAGE__->meta->make_immutable;
+
+1;
+
+__END__
+
+=head1 NAME
+
+[% module %] - 
+
+=head1 VERSION
+
+This documentation refers to [% module %] version 0.1.
+
+=head1 SYNOPSIS
+
+   use [% module %];
+
+   # Brief but working code example(s) here showing the most common usage(s)
+   # This section will be as far as many users bother reading, so make it as
+   # educational and exemplary as possible.
+
+=head1 DESCRIPTION
+
+This WADL client code was extracted from L<[% location %]>;
+
+=head1 SUBROUTINES/METHODS
+
+=over 4
+
+=back
+
+[% INCLUDE pod.tt %]
