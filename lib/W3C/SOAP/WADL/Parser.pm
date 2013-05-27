@@ -68,22 +68,95 @@ sub write_modules {
     confess "No module name setup"   if !$self->has_module;
     confess "No template object set" if !$self->has_template;
 
-    my $wadl = $self->document;
-    my $template = $self->template;
-    my $file     = $self->lib . '/' . $self->module . '.pm';
-    $file =~ s{::}{/}g;
-    warn $file = file $file;
-    my $parent = $file->parent;
-    my @missing;
-    while ( !-d $parent ) {
-        push @missing, $parent;
-        $parent = $parent->parent;
+    for my $resources (@{ $self->document->resources }) {
+        my $class_name = "Dynamic::WADL::" . ns2module($resources->path);
+        my $file       = $self->lib . '/' . $self->module . '.pm';
+        $file =~ s{::}{/}g;
+        my %methods;
+
+        for my $resource (@{ $resources->resource }) {
+            for my $method (@{ $resource->method }) {
+                my $request  = $self->write_method_object(
+                    $class_name,
+                    $resources,
+                    $resource,
+                    $method,
+                    $method->request
+                );
+
+                my %responses;
+                eval { $method->response };
+                if ( $method->has_response ) {
+                    for my $response (@{ $method->response }) {
+                        $responses{$response->status}
+                            = $self->write_method_object(
+                                $class_name,
+                                $resources,
+                                $resource,
+                                $method,
+                                $response,
+                            );
+                    }
+                }
+
+                my $name = $resource->path . '_' . uc $method->name;
+                $methods{$name} = {
+                    package_name => $class_name,
+                    name         => $name,
+                    path         => $resource->path,
+                    method       => $method->name,
+                    request      => $request,
+                    response     => \%responses,
+                };
+            }
+        }
+
+        $self->write_module(
+            'wadl/pm.tt',
+            {
+                module  => $class_name,
+                methods => \%methods,
+            },
+            $file,
+        );
     }
-    mkdir $_ for reverse @missing;
 
+    return;
+}
 
-    warn Dumper $self->document;
-    warn $self->document->_file;
+my %written;
+sub write_module {
+    my ($self, $tt, $data, $file) = @_;
+    my $template = $self->template;
+
+     if ($written{$file}++) {
+        warn "Already written $file!\n";
+        return;
+    }
+
+    $template->process($tt, $data, "$file");
+    confess "Error in creating $file (via $tt): ". $template->error."\n"
+        if $template->error;
+}
+
+sub write_method_object {
+    my ( $self, $base, $resources, $resource, $method, $type ) = @_;
+    my $class_name = $base . '::' . $resource->path . uc $method->name;
+    $class_name .= '::' . $type->status if $type->can('status') && $type->status;
+    my $file = $self->lib . '/' . $class_name . '.pm';
+    $file =~ s{::}{/}g;
+
+    $self->write_module(
+        'wadl/element.pm.tt',
+        {
+            module => $class_name,
+            params => [ $resources, $resource, $type ],
+            representations => $type,
+        },
+        $file,
+    );
+
+    return $class_name;
 }
 
 my %cache;
