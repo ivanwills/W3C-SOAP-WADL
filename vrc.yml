@@ -1,0 +1,27 @@
+---
+
+2:
+    - bin/wadlparser
+    - lib/W3C/SOAP/WADL.pm
+    - lib/W3C/SOAP/WADL/*.pm
+
+3:
+    - lib/W3C/SOAP/WADL/Document/*.pm
+
+4:
+    - eg/ping.wadl
+    - eg/ping.xsd
+    - eg/ping.xjb
+    - t/yahoo.wadl
+
+5:
+    - t/app*
+
+6:
+    - lib/XSD/Ping.pm
+    - lib/XSD/Ping/*.pm
+
+7:
+    - bin/wadlparser
+    - lib/W3C/SOAP/WADL/Traits.pm
+    - lib/W3C/SOAP/WADL/Meta/Method.pm
