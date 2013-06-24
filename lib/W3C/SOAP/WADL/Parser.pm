@@ -354,6 +354,10 @@ This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
 
 =head2 write_modules
 
+=head2 write_module
+
+=head2 write_method_object
+
 =head2 load_wadl
 
 =head2 dynamic_classes
