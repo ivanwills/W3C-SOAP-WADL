@@ -6,6 +6,7 @@ package W3C::SOAP::WADL::Document::Request;
 # $Revision$, $HeadURL$, $Date$
 # $Revision$, $Source$, $Date$
 
+use strict;
 use XML::Rabbit;
 use version;
 use Carp;
