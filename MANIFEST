@@ -31,6 +31,7 @@ lib/W3C/SOAP/WADL/Traits.pm
 t/00-load.t
 t/app.pl
 t/app.t
+t/app-static.t
 t/boilerplate.t
 t/critic.t
 t/kwalitee.t
