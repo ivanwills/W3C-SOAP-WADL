@@ -172,7 +172,7 @@ __DATA__
 
 =head1 NAME
 
-wadlparser - Parses a WADL file to geterate a REST client
+wadlparser - Parses a WADL file to generate a REST client
 
 =head1 VERSION
 
