@@ -18,7 +18,7 @@ get '/ping' => sub {
 
     $self->res->headers->header('X-Response-ID', $x_r++);
     $self->res->headers->header('I-Response-ID', $i_r++);
-    $self->render_json({message => 'get'});
+    $self->render( json => {message => 'get'} );
 };
 post '/ping' => sub {
     my ($self) = @_;
