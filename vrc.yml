@@ -9,10 +9,7 @@
     - lib/W3C/SOAP/WADL/Document/*.pm
 
 4:
-    - eg/ping.wadl
-    - eg/ping.xsd
-    - eg/ping.xjb
-    - t/yahoo.wadl
+    - templates/wadl/*.tt
 
 5:
     - t/app*
