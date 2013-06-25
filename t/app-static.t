@@ -58,7 +58,7 @@ sub get_parser {
         EVAL_PERL    => 1,
     );
 
-    my $wadl = W3C::SOAP::WADL::Parser->new(
+    $wadl = W3C::SOAP::WADL::Parser->new(
         location => {
         },
         template => $template,
