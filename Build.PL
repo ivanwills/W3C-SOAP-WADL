@@ -22,7 +22,6 @@ my $builder = Module::Build->new(
         'TryCatch'                     => 0,
         'W3C::SOAP::Utils'             => '0.1.0',
         'W3C::SOAP::XSD'               => '0.1.0',
-        'WWW::Mechanize'               => 0,
         'XML::Rabbit'                  => 0,
         'XML::Rabbit::Root'            => 0,
         'version'                      => 0,
@@ -34,6 +33,7 @@ my $builder = Module::Build->new(
         'Test::More'        => 0,
         'Test::NoWarnings'  => 0,
         'Mojolicious::Lite' => 0,
+        'WWW::Mechanize'    => 0,
     },
     recommends => {
         'Test::Spelling'     => 0,
