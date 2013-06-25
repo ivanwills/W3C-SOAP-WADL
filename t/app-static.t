@@ -11,7 +11,8 @@ use File::ShareDir qw/dist_dir/;
 use Template;
 use Data::Dumper qw/Dumper/;
 
-my $app = file($0)->parent->file('app.pl');
+my $dir = file($0)->parent;
+my $app = $dir->file('app.pl');
 
 my $pid = fork;
 
@@ -26,7 +27,7 @@ elsif ( !$pid ) {
     close STDOUT;
     open STDOUT, '>', '/dev/null';
 
-    exec $app, 'daemon', '--listen', 'http://*:4000';
+    exec $app, 'daemon', '--listen', 'http://*:4001';
 }
 
 sleep 1;
@@ -47,7 +48,7 @@ kill 9, $pid or diag "Error killing child! $!\n";
 done_testing();
 
 sub get_parser {
-    $mech->get('http://localhost:4000/wadl');
+    $mech->get('http://localhost:4001/wadl');
     my $wadl = $mech->content;
     ok $wadl, 'Get the WADL text from the server'
         or diag $mech->status;
@@ -59,12 +60,25 @@ sub get_parser {
     );
 
     $wadl = W3C::SOAP::WADL::Parser->new(
-        location => {
-        },
+        location => 'http://localhost:4001/wadl',
         template => $template,
         module   => 'Test::Ping',
+        lib      => $dir->subdir('lib').'',
     );
+    ok $wadl, "Got a parser object";
+
+    my @files = $dir->subdir('lib', 'Test')->children;
+    for my $file (@files) {
+        if (-d $file) {
+            push @files, $file->children;
+        }
+        elsif ( -f $file ) {
+            unlink $file;
+        }
+    }
+
     $wadl->write_modules;
+    ok -f $dir->file(qw/lib Test Ping.pm/), "Wrote main lib file";
 }
 
 sub check_dynamic {
