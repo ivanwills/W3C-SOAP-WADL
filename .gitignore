@@ -21,3 +21,4 @@ vim.sh
 temp/*
 errors.err
 tmp/
+t/lib
