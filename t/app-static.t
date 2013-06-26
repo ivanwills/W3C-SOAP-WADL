@@ -67,19 +67,24 @@ sub get_parser {
     );
     ok $wadl, "Got a parser object";
 
-    my @files = $dir->subdir('lib', 'Test')->children;
-    for my $file (@files) {
-        if (-d $file) {
-            push @files, $file->children;
-        }
-        elsif ( -f $file ) {
-            unlink $file;
+    my $test  = $dir->subdir('lib', 'Test');
+    if ( -d $test ) {
+        my @files = $test->children;
+        for my $file (@files) {
+            if (-d $file) {
+                push @files, $file->children;
+            }
+            elsif ( -f $file ) {
+                unlink $file;
+            }
         }
     }
 
     $wadl->write_modules;
     ok -f $dir->file(qw/lib Test Ping.pm/), "Wrote main lib file";
 
+    # add path to @INC;
+    push @INC, $dir->subdir('lib').'';
     # use generated module
     use_ok 'Test::Ping';
 
