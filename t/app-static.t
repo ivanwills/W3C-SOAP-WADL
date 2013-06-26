@@ -79,6 +79,11 @@ sub get_parser {
 
     $wadl->write_modules;
     ok -f $dir->file(qw/lib Test Ping.pm/), "Wrote main lib file";
+
+    # use generated module
+    use_ok 'Test::Ping';
+
+    return Test::Ping->new;
 }
 
 sub check_dynamic {
