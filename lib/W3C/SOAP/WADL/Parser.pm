@@ -70,7 +70,6 @@ sub write_modules {
     my $class_base = $self->document->module || 'Dynamic::WADL';
 
     for my $resources (@{ $self->document->resources }) {
-        warn $resources->path;
         my $class_name = $class_base . '::' . ns2module($resources->path);
         my $file       = $self->lib . '/' . $self->module . '.pm';
         $file =~ s{::}{/}g;
