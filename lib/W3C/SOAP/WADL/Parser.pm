@@ -67,9 +67,11 @@ sub write_modules {
     confess "No lib directory setup" if !$self->has_lib;
     confess "No module name setup"   if !$self->has_module;
     confess "No template object set" if !$self->has_template;
+    my $class_base = $self->document->module || 'Dynamic::WADL';
 
     for my $resources (@{ $self->document->resources }) {
-        my $class_name = "Dynamic::WADL::" . ns2module($resources->path);
+        warn $resources->path;
+        my $class_name = $class_base . '::' . ns2module($resources->path);
         my $file       = $self->lib . '/' . $self->module . '.pm';
         $file =~ s{::}{/}g;
         my %methods;
@@ -114,7 +116,7 @@ sub write_modules {
         $self->write_module(
             'wadl/pm.tt',
             {
-                module  => $class_name,
+                module  => $class_base,
                 methods => \%methods,
             },
             $file,
