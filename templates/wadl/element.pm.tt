@@ -12,12 +12,29 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
+use MooseX::Types::Moose qw/Str/;
 use W3C::SOAP::Utils;
+use W3C::SOAP::WADL::Traits;
 
 extends 'W3C::SOAP::WADL::Element';
 
 our $VERSION = version->new('0.0.1');
 
+[%- FOR container IN params %]
+[%-     FOR param IN container.param %]
+[%-         name = param.name.replace('\W', '_', 'g') %]
+has [% name %] => (
+    is            => 'rw',
+    isa           => Str, # TODO Get type validation done
+    predicate     => 'has_[% name %]',
+    required      => [% param.required == 'true' ? 1 : 0 %],
+    documentation => '[% param.doc %]',
+    traits        => [qw{ W3C::SOAP::WADL }],
+    style         => '[% param.style %]',
+    real_name     => '[% param.name %]',
+);
+[%-     END %]
+[%- END %]
 
 __PACKAGE__->meta->make_immutable;
 
@@ -27,7 +44,7 @@ __END__
 
 =head1 NAME
 
-[% module %] - 
+[% module %] -
 
 =head1 VERSION
 
