@@ -71,7 +71,7 @@ sub _request {
     }
 
     my $res_class = $response->{ $http_response->code };
-    my $object  = $res_class->new( $http_response );
+    my $object    = $res_class->new( $http_response );
     $self->_response($object);
 
     my $content = $http_response->content;

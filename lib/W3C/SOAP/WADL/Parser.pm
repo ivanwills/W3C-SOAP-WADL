@@ -115,8 +115,9 @@ sub write_modules {
         $self->write_module(
             'wadl/pm.tt',
             {
-                module  => $class_base,
-                methods => \%methods,
+                module   => $class_base,
+                methods  => \%methods,
+                location => $resources->path,
             },
             $file,
         );
