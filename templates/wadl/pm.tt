@@ -12,7 +12,13 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
-use W3C::SOAP::Utils;
+use W3C::SOAP::WADL::Utils;
+[% FOR method IN methods %]
+use [% method.value.request  %];
+[%-    FOR response IN method.value.response %]
+use [% response.value %];
+[%-    END -%]
+[% END %]
 
 extends 'W3C::SOAP::WADL';
 
@@ -22,6 +28,19 @@ has '+location' => (
     default => '[% resources.path %]',
 );
 
+[% FOR method IN methods %]
+operation [% method.key %] => (
+    path         => '[% method.value.path     %]',
+    method       => '[% method.value.method   %]',
+    request      => '[% method.value.request  %]',
+    response     => {
+[%-    FOR response IN method.value.response %]
+        '[% response.key %]' => '[% response.value %]',
+[%-    END %]
+    },
+);
+[% END %]
+
 __PACKAGE__->meta->make_immutable;
 
 1;
@@ -30,7 +49,7 @@ __END__
 
 =head1 NAME
 
-[% module %] - 
+[% module %] -
 
 =head1 VERSION
 
