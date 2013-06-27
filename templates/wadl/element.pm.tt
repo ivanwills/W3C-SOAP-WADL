@@ -12,13 +12,24 @@ use warnings;
 use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
-use MooseX::Types::Moose qw/Str/;
+use MooseX::Types::Moose qw/Str HashRef/;
 use W3C::SOAP::Utils;
 use W3C::SOAP::WADL::Traits;
 
 extends 'W3C::SOAP::WADL::Element';
 
 our $VERSION = version->new('0.0.1');
+
+has _representations => (
+    is        => 'ro',
+    isa       => HashRef,
+    predicate => 'has_representations',
+    default   => sub {{
+[%- FOR representation IN representations.representation %]
+        '[% representation.media_type || 'text/plain' %]' => {},
+[%- END %]
+    }},
+);
 
 [%- FOR container IN params %]
 [%-     FOR param IN container.param %]
