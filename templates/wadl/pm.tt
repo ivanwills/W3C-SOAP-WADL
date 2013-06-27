@@ -25,7 +25,7 @@ extends 'W3C::SOAP::WADL';
 our $VERSION = version->new('0.0.1');
 
 has '+location' => (
-    default => '[% resources.path %]',
+    default => '[% location %]',
 );
 
 [% FOR method IN methods %]
