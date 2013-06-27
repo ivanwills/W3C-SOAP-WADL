@@ -156,8 +156,6 @@ __DATA__
                 <response status="412">
                     <representation mediaType="application/json"
                         json:serialize="au.com.optus.gdl.rest.domain.v3.service.ping.dto.PingResponse"/>
-                </response>
-                <response status="412">
                     <representation mediaType="application/xml"/>
                 </response>
             </method>
