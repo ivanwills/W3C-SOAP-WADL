@@ -12,6 +12,7 @@ use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use TryCatch;
+use JSON qw/decode_json/;
 
 extends 'W3C::SOAP::Client';
 
@@ -75,9 +76,34 @@ sub _request {
 
     my $content = $http_response->content;
     if ( $object->has_representations ) {
-        my $rep = $object->_representations->{ $http_response->headers->content_type };
+        my $type = lc $http_response->headers->content_type;
+        my $rep  = $object->_representations->{$type};
+
         if ( $rep ) {
-            $content = $rep->{parser} ? $rep->{parser}->( $content ) : $content;
+
+            # Do any parsing of content
+            if ( $rep->{parser} && ref $rep->{parser} eq 'CODE' ) {
+                # custom user defined parser
+                $content = $rep->{parser}->( $content );
+            }
+            elsif ( $type eq 'application/json' ) {
+                # process JSON
+                $content = decode_json($content);
+            }
+            elsif ( $type eq 'text/xml' || $type eq 'application/xml' ) {
+                # get xml element object
+                $content = XML::LibXML->load_xml( string => $content );
+            }
+            elsif (
+                $type eq 'x-application-urlencoded'
+                || $type eq 'application/x-www-form-urlencoded'
+                || $type eq 'multipart/form-data'
+            ) {
+                # get a form element object
+                $content = { map { (split /=/, $_) } split /&/, $content };
+            }
+
+            # if the content should be inflated to a particular class, do so
             if ( $rep->{class} ) {
                 my $class = $rep->{class};
                 $content = $class->new($content);

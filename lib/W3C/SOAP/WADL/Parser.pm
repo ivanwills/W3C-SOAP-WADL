@@ -283,35 +283,8 @@ sub add_representations {
             eval { $rep->media_type };
             $rep->media_type('text/plain') unless $rep->media_type;
 
-            my $type = lc $rep->media_type;
-
-            if ( $type eq 'application/json' ) {
-                # try to determine XML object or whatever
-                $rep_map{ $rep->media_type } = {
-                    parser => sub { decode_json(shift); },
-                };
-            }
-            elsif ( $type eq 'text/xml' || $type eq 'application/xml' ) {
-                # get xml element object
-                $rep_map{ $rep->media_type } = {
-                    parser => sub { XML::LibXML->load_xml( string => shift ) },
-                };
-            }
-            elsif (
-                $type eq 'x-application-urlencoded'
-                || $type eq 'application/x-www-form-urlencoded'
-                || $type eq 'multipart/form-data'
-            ) {
-                # get xml element object
-                $rep_map{ $rep->media_type } = {
-                    parser => sub {
-                        return { map { (split /=/, $_) } split /&/, shift };
-                    },
-                };
-            }
-            else {
-                $rep_map{ $rep->media_type } = undef;
-            }
+            # work out if the representation has a matching class
+            $rep_map{ $rep->media_type } = {};
         }
     }
 
