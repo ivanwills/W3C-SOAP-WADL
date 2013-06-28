@@ -10,7 +10,13 @@ if ( not $ENV{TEST_AUTHOR} ) {
 	plan( skip_all => $msg );
 }
 
-eval { require Test::Kwalitee; Test::Kwalitee->import() };
+eval {
+    require Test::Kwalitee;
+    Test::Kwalitee->import( tests =>
+        # skip testing pod errors as it's attempting to validate templates
+        [ qw( -no_pod_errors ) ]
+    );
+};
 
 if ($@) {
     require Test::More;
