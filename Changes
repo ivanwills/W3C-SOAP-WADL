@@ -1,5 +1,63 @@
 Revision history for W3C-SOAP-WADL
 
-0.0.1   2013-04-26
-        First version, released on an unsuspecting world.
+0.0.1   2013-06-28
+        Added missing module test
+        Got tests working better
+        Fixed manifest files
+        Fixed tests so that app app-static can run on different ports
+        Added representations attribute
+        Changed setting location default to correct value
+        Added setting the location
+        Had two responses with the same status, changed to two different representations
+        Moved default representation passing from WADL parser code to the client code
+        Generated elements now compile
+        Added loading dependancies and generating operations
+        Added operation helper
+        Removed accedentially added warn
+        Fixed? class name generation
+        Fixed trying to remove created test files when none were created, added test lib dir to @INC
+        Added ignoring created test libs
+        Added testing that we generate a Test::Ping module and creating a new object
+        Got static lib generation starting
+        Moved WWW::Mechanize to build dependency as that is where it's used
+        Removed warning
+        Changed 4 from examples to templates
+        Fixed Mojolicious removing render_json method
+        Added use strict (even if XML::Rabbit supplies it) to satisfy Kwalitee
+        Added place holder for documentation
+        Added missing file
+        Fixed spelling
+        Fixed double opening
+        Added config for v, make sure it isn't distibuted
+        Starting to get static client generation going
+        Fixed ignores and missing files from manifest
+        Removed todo
+        Added configure requires section
+        Got templates writing
+        Starting to work on non static implementation
+        Updated manifest files
+        Changed from using mech to using LWP::UserAgent to match W3C::SOAP change
+        Updated dependancies
+        Changed to specify all files as order matters
+        Added testing returned content
+        Implemented passing returned content
+        started testing returned response
+        Added post result
+        Started to build request and process response
+        Got boilerplate test workgin
+        Added tests for dynamic objects
+        New modules for building dynamic objects
+        Now building dynamic objects
+        Added predicates
+        Test WADL application and script
+        Fixed minor issues
+        Fixed incorrect attribute name
+        Specified all attributes/elements per the documentation at http://www.w3.org/Submission/wadl/
+        Started on getting parsing working
+        Converted to using XML::Rabit
+        More WADL baised objects
+        Parser script
+        Lots of new modules
+        Added ignores
+        initial commit
 
