@@ -4,6 +4,7 @@
     - bin/wadlparser
     - lib/W3C/SOAP/WADL.pm
     - lib/W3C/SOAP/WADL/*.pm
+    - lib/W3C/SOAP/WADL/Meta/Method.pm
 
 3:
     - lib/W3C/SOAP/WADL/Document/*.pm

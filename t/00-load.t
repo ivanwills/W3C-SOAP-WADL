@@ -23,6 +23,7 @@ use_ok('W3C::SOAP::WADL::Meta::Method');
 use_ok('W3C::SOAP::WADL::Node');
 use_ok('W3C::SOAP::WADL::Traits');
 use_ok('W3C::SOAP::WADL::Parser');
+use_ok('W3C::SOAP::WADL::Utils');
 use_ok('W3C::SOAP::WADL');
 
 diag( "Testing W3C::SOAP::WADL $W3C::SOAP::WADL::VERSION, Perl $], $^X" );
