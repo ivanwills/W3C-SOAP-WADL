@@ -68,3 +68,4 @@ t/yahoo.wadl
 tags
 tmp/
 vrc.yml
+t/lib/Test/*

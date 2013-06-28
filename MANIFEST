@@ -28,6 +28,7 @@ lib/W3C/SOAP/WADL/Meta/Method.pm
 lib/W3C/SOAP/WADL/Node.pm
 lib/W3C/SOAP/WADL/Parser.pm
 lib/W3C/SOAP/WADL/Traits.pm
+lib/W3C/SOAP/WADL/Utils.pm
 t/00-load.t
 t/app.pl
 t/app.t
