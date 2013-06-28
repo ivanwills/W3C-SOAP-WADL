@@ -11,10 +11,10 @@ use File::ShareDir qw/dist_dir/;
 use Template;
 use Data::Dumper qw/Dumper/;
 
-my $dir = file($0)->parent;
-my $app = $dir->file('app.pl');
-
-my $pid = fork;
+my $dir  = file($0)->parent;
+my $app  = file($0)->parent->file('app.pl');
+my $port = 4001;
+my $pid  = fork;
 
 if ( !defined $pid ) {
     plan skip_all => "Couldn't start test server! $!\n";
@@ -27,7 +27,8 @@ elsif ( !$pid ) {
     close STDOUT;
     open STDOUT, '>', '/dev/null';
 
-    exec $app, 'daemon', '--listen', 'http://*:4001';
+    $ENV{PORT} = $port;
+    exec $app, 'daemon', '--listen', "http://*:$port";
 }
 
 sleep 1;
@@ -48,7 +49,7 @@ kill 9, $pid or diag "Error killing child! $!\n";
 done_testing();
 
 sub get_parser {
-    $mech->get('http://localhost:4001/wadl');
+    $mech->get("http://localhost:$port/wadl");
     my $wadl = $mech->content;
     ok $wadl, 'Get the WADL text from the server'
         or diag $mech->status;
@@ -60,7 +61,7 @@ sub get_parser {
     );
 
     $wadl = W3C::SOAP::WADL::Parser->new(
-        location => 'http://localhost:4001/wadl',
+        location => "http://localhost:$port/wadl",
         template => $template,
         module   => 'Test::Ping',
         lib      => $dir->subdir('lib').'',

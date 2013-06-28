@@ -9,9 +9,9 @@ use WWW::Mechanize;
 use TryCatch;
 use Data::Dumper qw/Dumper/;
 
-my $app = file($0)->parent->file('app.pl');
-
-my $pid = fork;
+my $app  = file($0)->parent->file('app.pl');
+my $port = 4000;
+my $pid  = fork;
 
 if ( !defined $pid ) {
     plan skip_all => "Couldn't start test server! $!\n";
@@ -24,7 +24,8 @@ elsif ( !$pid ) {
     close STDOUT;
     open STDOUT, '>', '/dev/null';
 
-    exec $app, 'daemon', '--listen', 'http://*:4000';
+    $ENV{PORT} = $port;
+    exec $app, 'daemon', '--listen', "http://*:$port";
 }
 
 sleep 1;
@@ -45,7 +46,7 @@ kill 9, $pid or diag "Error killing child! $!\n";
 done_testing();
 
 sub get_parser {
-    $mech->get('http://localhost:4000/wadl');
+    $mech->get("http://localhost:$port/wadl");
     my $wadl = $mech->content;
     ok $wadl, 'Get the WADL text from the server'
         or diag $mech->status;
@@ -53,9 +54,9 @@ sub get_parser {
     my $parser = W3C::SOAP::WADL::Parser->new( string => $wadl );
     ok $parser, 'Get a parser object';
 
-    my $orig = W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' );
+    my $orig = W3C::SOAP::WADL::Parser::load_wadl( "http://localhost:$port/wadl" );
 
-    is $orig, W3C::SOAP::WADL::Parser::load_wadl( 'http://localhost:4000/wadl' ), 'Values are cached';
+    is $orig, W3C::SOAP::WADL::Parser::load_wadl( "http://localhost:$port/wadl" ), 'Values are cached';
 
     return $orig;
 }
@@ -63,7 +64,7 @@ sub get_parser {
 sub check_dynamic {
     my $wadl = shift;
 
-    ok $wadl, 'Create new object';
+    ok $wadl, 'Created new object';
 
     my ($res, $ping) = $wadl->ping_GET(
         'X_Request_ID'       => 1,

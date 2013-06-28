@@ -8,7 +8,7 @@ use Data::Dumper qw/Dumper/;
 get '/wadl' => sub {
     my ($self) = @_;
 
-    $self->render('wadl');
+    $self->render(html => 'wadl', port => $ENV{PORT});
 };
 
 my $x_r = 0;
@@ -82,7 +82,7 @@ __DATA__
         This service provides basic "ping" functionality which allows the calling
         clients/partners to test their connectivity to the platform.
     </doc>
-    <resources path="http://localhost:4000/">
+    <resources path="http://localhost:<%= $port || 3000 %>/">
         <resource path="ping" id="Ping">
             <method name="GET" id="ping">
                 <doc xml:lang="en" title="Ping">
