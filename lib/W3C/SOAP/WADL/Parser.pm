@@ -307,7 +307,8 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Parser - <One-line description of module's purpose>
+W3C::SOAP::WADL::Parser - Parses a WADL file and produces a client for
+calling the specified webservice.
 
 =head1 VERSION
 
@@ -363,7 +364,6 @@ Patches are welcome.
 =head1 AUTHOR
 
 Ivan Wills - (ivan.wills@gmail.com)
-<Author name(s)>  (<contact address>)
 
 =head1 LICENSE AND COPYRIGHT
 
