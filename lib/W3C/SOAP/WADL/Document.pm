@@ -65,7 +65,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document - The representation of the WADL document
 
 =head1 VERSION
 
@@ -76,34 +76,42 @@ This documentation refers to W3C::SOAP::WADL::Document version 0.1.
 
    use W3C::SOAP::WADL::Document;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
-
+   # create a document
+   my $doc = W3C::SOAP::WADL::Document->new( file => 'file_or_url', );
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
-
 =head1 SUBROUTINES/METHODS
 
-A separate section listing the public components of the module's interface.
+=over 4
 
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
+=item wadl
 
-Name the section accordingly.
+=item json
 
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
+=item target_namespace
 
+=item doc
 
+=item grammars
 
+=item resources
+
+=item resource_type
+
+=item method
+
+=item representation
+
+=item param
+
+=item module
+
+=item module_base
+
+=item file
+
+=back
 
 =head1 DIAGNOSTICS
 

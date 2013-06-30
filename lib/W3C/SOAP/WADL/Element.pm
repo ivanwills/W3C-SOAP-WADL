@@ -9,17 +9,10 @@ package W3C::SOAP::WADL::Element;
 use Moose;
 use version;
 use Carp qw/carp croak cluck confess longmess/;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-
 our $VERSION     = version->new('0.0.1');
-our @EXPORT_OK   = qw//;
-our %EXPORT_TAGS = ();
-#our @EXPORT      = qw//;
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
@@ -135,12 +128,12 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Element - <One-line description of module's purpose>
+W3C::SOAP::WADL::Element - Provides ability to map inputted request object
+to response object.
 
 =head1 VERSION
 
 This documentation refers to W3C::SOAP::WADL::Element version 0.1.
-
 
 =head1 SYNOPSIS
 
@@ -153,27 +146,9 @@ This documentation refers to W3C::SOAP::WADL::Element version 0.1.
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
-
-May include numerous subsections (i.e., =head2, =head3, etc.).
-
+Has a builder the will convert a HTTP request object to the WADL object.
 
 =head1 SUBROUTINES/METHODS
-
-A separate section listing the public components of the module's interface.
-
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
-
-Name the section accordingly.
-
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
-
-
-
 
 =head1 DIAGNOSTICS
 

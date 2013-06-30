@@ -65,7 +65,8 @@ This documentation refers to W3C::SOAP::WADL::Traits version 0.1.
 
 =head1 DESCRIPTION
 
-
+Adds the extra information that L<W3C""SOAP::WADL::Client> neads for sending
+a request.
 
 =head1 ATTRIBUTES
 
@@ -73,7 +74,7 @@ This documentation refers to W3C::SOAP::WADL::Traits version 0.1.
 
 =item style
 
-Either header or query.
+The WADL parameter is either header or query parameter.
 
 =item real_name
 

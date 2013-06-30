@@ -55,45 +55,57 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Meta::Method - <One-line description of module's purpose>
+W3C::SOAP::WADL::Meta::Method - Parameters needed for WADL opperations.
 
 =head1 VERSION
 
 This documentation refers to W3C::SOAP::WADL::Meta::Method version 0.0.7.
 
-
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL::Meta::Method;
+   use W3C::SOAP::WADL::Utils;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
-
+   # create an opperation in the current class
+   operation name => (
+       path     => 'rel/path',
+       method   => 'GET',
+       request  => 'Some::Thing::nameGET',
+       response => {
+           200 => 'Some::Ting::pingGet::200',
+           400 => 'Some::Ting::pingGet::400',
+       },
+   );
 
 =head1 DESCRIPTION
 
-A full description of the module and its features.
+Provides the description of extra parameters for operations, use L<W3C::SOAP::WADL::Utils>'s
+operation function to access this functionality.
 
-May include numerous subsections (i.e., =head2, =head3, etc.).
+=head1 ATTRIBUTES
 
+=over 4
 
-=head1 SUBROUTINES/METHODS
+=item name
 
-A separate section listing the public components of the module's interface.
+The name of the opperation
 
-These normally consist of either subroutines that may be exported, or methods
-that may be called on objects belonging to the classes that the module
-provides.
+=item path
 
-Name the section accordingly.
+The path of the operation (relative to the WADL's base)
 
-In an object-oriented module, this section should begin with a sentence (of the
-form "An object of this class represents ...") to give the reader a high-level
-context to help them understand the methods that are subsequently described.
+=item method
 
+The type of HHTP request GET, POST, PUT, DELETE etc
 
+=item request
 
+The request class name
+
+=item response
+
+A map of response HTTP status codes to classes
+
+=back
 
 =head1 DIAGNOSTICS
 
