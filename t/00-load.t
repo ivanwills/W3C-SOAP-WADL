@@ -12,7 +12,6 @@ use_ok('W3C::SOAP::WADL::Document::Request');
 use_ok('W3C::SOAP::WADL::Document::Representation');
 use_ok('W3C::SOAP::WADL::Document::Param');
 use_ok('W3C::SOAP::WADL::Document::Option');
-use_ok('W3C::SOAP::WADL::Document::Node');
 use_ok('W3C::SOAP::WADL::Document::Method');
 use_ok('W3C::SOAP::WADL::Document::Link');
 use_ok('W3C::SOAP::WADL::Document::Grammars');
