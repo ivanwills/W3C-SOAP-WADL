@@ -71,7 +71,6 @@ W3C::SOAP::WADL::Document - The representation of the WADL document
 
 This documentation refers to W3C::SOAP::WADL::Document version 0.1.
 
-
 =head1 SYNOPSIS
 
    use W3C::SOAP::WADL::Document;
@@ -84,10 +83,6 @@ This documentation refers to W3C::SOAP::WADL::Document version 0.1.
 =head1 SUBROUTINES/METHODS
 
 =over 4
-
-=item wadl
-
-=item json
 
 =item target_namespace
 

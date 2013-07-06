@@ -153,15 +153,14 @@ This documentation refers to W3C::SOAP::WADL version 0.1.
 
 =head1 SYNOPSIS
 
-   use W3C::SOAP::WADL;
+   use W3C::SOAP::WADL::Utils;
+   extends 'W3C::SOAP::WADL';
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
+   operation name_method (...);
 
 =head1 DESCRIPTION
 
-The C<W3C::SOAP::WADL> ...
+The C<W3C::SOAP::WADL> class is base class of generated WADL clients.
 
 =head1 SUBROUTINES/METHODS
 

@@ -9,9 +9,6 @@ package W3C::SOAP::WADL::Parser;
 use Moose;
 use version;
 use Carp;
-use Scalar::Util;
-use List::Util;
-#use List::MoreUtils;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/ns2module/;
@@ -314,36 +311,54 @@ calling the specified webservice.
 
 This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
 
-
 =head1 SYNOPSIS
 
    use W3C::SOAP::WADL::Parser;
 
-   # Brief but working code example(s) here showing the most common usage(s)
-   # This section will be as far as many users bother reading, so make it as
-   # educational and exemplary as possible.
+   # generate a dynamic WADL object.
+   my $ws = load_wadl('http://localhost/myws.wadl');
 
 
 =head1 DESCRIPTION
 
+C<W3C::SOAP::WADL> parses WADL files to generate WADL clients. The clients
+can be either dynamic clients whenre the client is regenerated each time
+the code is run see L<load_wadl> or static client where the clients are
+written to disk as Perl modules and C<use>d by programs see L<write_modules>
+
 =head1 SUBROUTINES/METHODS
 
-=head2 write_modules
+=head2 C<write_modules ()>
 
-=head2 write_module
+Writes all the module WADL clients (and XSDs if found) to disk
 
-=head2 write_method_object
+=head2 C<write_module ()>
 
-=head2 load_wadl
+Helper to writes the top level WADL client object.
 
-=head2 dynamic_classes
+=head2 C<write_method_object ()>
 
-=head2 build_method_object
+Writes the modules that contain the WADL method details.
 
-=head2 add_params
+=head2 C<load_wadl($file_or_url)>
 
-=head2 add_representations
+Generates a WADL client in memory for the passed WADL file/URL.
 
+=head2 C<dynamic_classes ()>
+
+Generates all the method classes.
+
+=head2 C<build_method_object ()>
+
+Generates all the individual method classes.
+
+=head2 C<add_params ()>
+
+Adds the parameters for a method
+
+=head2 C<add_representations ()>
+
+Adds the representations that a method can take
 
 =head1 DIAGNOSTICS
 
