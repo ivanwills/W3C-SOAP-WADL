@@ -20,7 +20,6 @@ use_ok('W3C::SOAP::WADL::Document::Doc');
 use_ok('W3C::SOAP::WADL::Document');
 use_ok('W3C::SOAP::WADL::Element');
 use_ok('W3C::SOAP::WADL::Meta::Method');
-use_ok('W3C::SOAP::WADL::Node');
 use_ok('W3C::SOAP::WADL::Traits');
 use_ok('W3C::SOAP::WADL::Parser');
 use_ok('W3C::SOAP::WADL::Utils');
