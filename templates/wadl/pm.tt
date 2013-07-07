@@ -75,4 +75,4 @@ This WADL client code was extracted from L<[% location %]>;
 [% END %]
 =back
 
-[% INCLUDE pod.tt %]
+[% INCLUDE pod.tt -%]

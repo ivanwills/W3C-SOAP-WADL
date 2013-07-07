@@ -73,10 +73,18 @@ This documentation refers to [% module %] version 0.1.
 
 This WADL client code was extracted from L<[% location %]>;
 
-=head1 SUBROUTINES/METHODS
+=head1 ATTRIBUTES
 
 =over 4
+[%- FOR container IN params %]
+[%-     FOR param IN container.param %]
+[%-         name = param.name.replace('\W', '_', 'g') %]
 
+=item [% name %]
+
+C<[% param.name %]> is [% IF param.required %]required [% END %] for the [% param.style %] parameter.
+[%-     END %]
+[%- END %]
 =back
 
-[% INCLUDE pod.tt %]
+[% INCLUDE pod.tt -%]
