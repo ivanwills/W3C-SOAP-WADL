@@ -70,7 +70,9 @@ This WADL client code was extracted from L<[% location %]>;
 =head1 SUBROUTINES/METHODS
 
 =over 4
-
+[% FOR method IN methods %]
+=item C<[% method.key %] ()>
+[% END %]
 =back
 
 [% INCLUDE pod.tt %]
