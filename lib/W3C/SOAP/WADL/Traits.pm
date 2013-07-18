@@ -65,7 +65,7 @@ This documentation refers to W3C::SOAP::WADL::Traits version 0.1.
 
 =head1 DESCRIPTION
 
-Adds the extra information that L<W3C""SOAP::WADL::Client> neads for sending
+Adds the extra information that L<W3C""SOAP::WADL::Client> needs for sending
 a request.
 
 =head1 ATTRIBUTES

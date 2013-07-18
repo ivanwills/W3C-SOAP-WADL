@@ -322,7 +322,7 @@ This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
 =head1 DESCRIPTION
 
 C<W3C::SOAP::WADL> parses WADL files to generate WADL clients. The clients
-can be either dynamic clients whenre the client is regenerated each time
+can be either dynamic clients where the client is regenerated each time
 the code is run see L<load_wadl> or static client where the clients are
 written to disk as Perl modules and C<use>d by programs see L<write_modules>
 

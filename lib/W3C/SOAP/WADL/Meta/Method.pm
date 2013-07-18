@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Meta::Method - Parameters needed for WADL opperations.
+W3C::SOAP::WADL::Meta::Method - Parameters needed for WADL operations.
 
 =head1 VERSION
 
@@ -65,7 +65,7 @@ This documentation refers to W3C::SOAP::WADL::Meta::Method version 0.0.7.
 
    use W3C::SOAP::WADL::Utils;
 
-   # create an opperation in the current class
+   # create an operation in the current class
    operation name => (
        path     => 'rel/path',
        method   => 'GET',
@@ -87,7 +87,7 @@ operation function to access this functionality.
 
 =item name
 
-The name of the opperation
+The name of the operation
 
 =item path
 
@@ -95,7 +95,7 @@ The path of the operation (relative to the WADL's base)
 
 =item method
 
-The type of HHTP request GET, POST, PUT, DELETE etc
+The type of HTTP request GET, POST, PUT, DELETE etc
 
 =item request
 

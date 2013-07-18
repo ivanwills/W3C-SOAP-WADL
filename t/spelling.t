@@ -31,5 +31,9 @@ add_stopwords(qw/
     WADL
     wadlparser
     XSD
+    XSDs
+    webservice
+    param
+    WADL's
 /);
 all_pod_files_spelling_ok();
