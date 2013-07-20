@@ -1,5 +1,17 @@
 Revision history for W3C-SOAP-WADL
 
+0.002   2013-07-20
+        Fixed spelling test failures (Ivan Wills)
+        Added element attributes (Ivan Wills)
+        Started to add auto generated documentation (Ivan Wills)
+        Cleaned out default documentation (Ivan Wills)
+        Working on getting documentation up to scratch (Ivan Wills)
+        removed unused module lib/W3C/SOAP/WADL/Document/Node.pm (Ivan Wills)
+        removed unused module lib/W3C/SOAP/WADL/Node.pm (Ivan Wills)
+        More documentation (Ivan Wills)
+        Cleaning documentation (Ivan Wills)
+        Fixed ignoring build packages (Ivan Wills)
+
 0.0.1   2013-06-28
         Added missing module test
         Got tests working better

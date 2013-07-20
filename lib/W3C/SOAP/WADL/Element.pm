@@ -12,7 +12,7 @@ use Carp qw/carp croak cluck confess longmess/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION     = version->new('0.0.1');
+our $VERSION     = version->new('0.002');
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
