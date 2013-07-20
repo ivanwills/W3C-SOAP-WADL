@@ -14,7 +14,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Param;
 
-our $VERSION     = version->new('0.002');
+our $VERSION     = version->new('0.003');
 
 has_xpath_value resource_type => './@resource_type';
 has_xpath_value rel => './@rel';

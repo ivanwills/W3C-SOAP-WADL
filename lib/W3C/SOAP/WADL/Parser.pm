@@ -30,7 +30,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION = version->new('0.002');
+our $VERSION = version->new('0.003');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WADL::Document',

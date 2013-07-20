@@ -1,5 +1,8 @@
 Revision history for W3C-SOAP-WADL
 
+0.003   2013-07-20
+        Added better server start check (Ivan Wills)
+
 0.002   2013-07-20
         Fixed spelling test failures (Ivan Wills)
         Added element attributes (Ivan Wills)

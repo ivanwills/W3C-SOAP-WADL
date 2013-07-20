@@ -16,7 +16,7 @@ use JSON qw/decode_json/;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION     = version->new('0.002');
+our $VERSION     = version->new('0.003');
 
 has _response => (
     is  => 'rw',
