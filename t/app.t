@@ -30,6 +30,13 @@ elsif ( !$pid ) {
 
 sleep 1;
 my $mech = WWW::Mechanize->new;
+$mech->get("http://localhost:$port/wadl");
+my $wadl = $mech->content;
+
+if ( $mech->status != 200 || $wadl !~ m{^<application \s xmlns="http://wadl.dev}xms ) {
+    plan skip_all => "Couldn't connect to the test server! $!\n";
+    exit 0;
+}
 
 try {
 
