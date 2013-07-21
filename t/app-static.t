@@ -40,6 +40,9 @@ if ( $mech->status != 200 || $wadl !~ m{^<application \s xmlns="http://wadl.dev}
     plan skip_all => "Couldn't connect to the test server! $!\n";
     exit 0;
 }
+else {
+    diag substr $wadl, 0, 92;
+}
 
 try {
 
