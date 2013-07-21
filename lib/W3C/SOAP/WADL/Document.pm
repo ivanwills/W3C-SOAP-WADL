@@ -14,7 +14,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Resources;
 
-our $VERSION     = version->new('0.003');
+our $VERSION     = version->new('0.004');
 
 add_xpath_namespace wadl => 'http://wadl.dev.java.net/2009/02';
 add_xpath_namespace json => 'http://rest.domain.gdl.optus.com.au/rest/3/common-json';

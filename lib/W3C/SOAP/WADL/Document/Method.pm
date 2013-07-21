@@ -15,7 +15,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Request;
 use W3C::SOAP::WADL::Document::Response;
 
-our $VERSION     = version->new('0.003');
+our $VERSION     = version->new('0.004');
 
 has_xpath_value name => './@name';
 has_xpath_value id   => './@id';

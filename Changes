@@ -1,5 +1,8 @@
 Revision history for W3C-SOAP-WADL
 
+0.004   2013-07-21
+        Added diagnostics to show tests are really passing (Ivan Wills)
+
 0.003   2013-07-20
         Added better server start check (Ivan Wills)
 

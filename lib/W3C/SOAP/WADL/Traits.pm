@@ -13,7 +13,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use Moose::Util::TypeConstraints;
 
-our $VERSION = version->new('0.003');
+our $VERSION = version->new('0.004');
 
 Moose::Util::meta_attribute_alias('W3C::SOAP::WADL');
 
