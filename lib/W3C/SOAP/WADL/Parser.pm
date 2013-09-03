@@ -23,6 +23,7 @@ use W3C::SOAP::WADL::Traits;
 use W3C::SOAP::WADL::Meta::Method;
 use MooseX::Types::Moose qw/Str Int HashRef/;
 use JSON qw/decode_json/;
+use W3C::SOAP::Utils qw/ns2module/;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -36,11 +37,12 @@ has '+document' => (
     isa      => 'W3C::SOAP::WADL::Document',
     required => 1,
     handles  => {
-        module          => 'module',
-        has_module      => 'has_module',
-        ns_module_map   => 'ns_module_map',
-        module_base     => 'module_base',
-        has_module_base => 'has_module_base'
+        module           => 'module',
+        has_module       => 'has_module',
+        ns_module_map    => 'ns_module_map',
+        module_base      => 'module_base',
+        has_module_base  => 'has_module_base',
+        target_namespace => 'target_namespace',
     },
 );
 
@@ -62,8 +64,12 @@ around BUILDARGS => sub {
 sub write_modules {
     my ($self) = @_;
     confess "No lib directory setup" if !$self->has_lib;
-    confess "No module name setup"   if !$self->has_module;
     confess "No template object set" if !$self->has_template;
+    if ( !$self->has_module ) {
+       confess "No module name setup" if !$self->module_base;
+       $self->module($self->module_base . '::' . ns2module($self->target_namespace));
+   }
+
     my $class_base = $self->document->module || 'Dynamic::WADL';
 
     for my $resources (@{ $self->document->resources }) {
