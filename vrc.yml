@@ -1,16 +1,28 @@
 ---
 
-2:
-    - bin/wadlparser
+wadl:
+    - bin/wadl-parser
     - lib/W3C/SOAP/WADL.pm
     - lib/W3C/SOAP/WADL/*.pm
     - lib/W3C/SOAP/WADL/Meta/Method.pm
 
-3:
+wadl-doc:
     - lib/W3C/SOAP/WADL/Document/*.pm
 
-4:
+wadl-templ:
     - templates/wadl/*.tt
+
+xsd:
+    - bin/xsdparser
+    - lib/W3C/SOAP/XSD.pm
+    - lib/W3C/SOAP/XSD/*.pm
+    - lib/W3C/SOAP/XSD/Meta/Method.pm
+
+xsd-doc:
+    - lib/W3C/SOAP/XSD/Document/*.pm
+
+xsd-templ:
+    - templates/xsd/*.tt
 
 5:
     - t/app*
