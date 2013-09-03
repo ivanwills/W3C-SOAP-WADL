@@ -89,39 +89,44 @@ sub main {
         EVAL_PERL    => 1,
     );
 
-    die Dumper \@ARGV if @ARGV % 2;
-    my %map = @ARGV;
+    my ( $module, $wadl_file ) = @ARGV;
 
-    for my $module (keys %map) {
-
-        # check that %map modules don't overlap with $option{ns_module_map} modules
-        if ($option{ns_module_map}{$module}) {
-            die "The module '$module' is mapped from both the WADL '$map{$module}'"
-                . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
-                . " please use different modules!\n";
+    if ( !$wadl_file ) {
+        if ( !$option{module_base} ) {
+            warn "You must specify a package name for your WADL!\n";
+            pod2usage( -verbose => 1 );
         }
+        $wadl_file = $module;
+        $module = undef;
+    }
 
-        my $wadl = W3C::SOAP::WADL::Parser->new(
-            location => $map{$module},
-            template => $template,
-            module   => $module,
-            %option,
-        );
-        $wadl->write_modules;
+    # check that %map modules don't overlap with $option{ns_module_map} modules
+    if (!$option{module_base} && !$option{ns_module_map}{$module}) {
+        die "The module '$module' is mapped from both the WADL '$wadl_file'"
+            . " and the XMLSchema '$option{ns_module_map}{$module}' namespaces"
+            . " please use different modules!\n";
+    }
 
-        if ( $option{save} ) {
-            my $file = $map{$module};
+    my $wadl = W3C::SOAP::WADL::Parser->new(
+        location => $wadl_file,
+        template => $template,
+        $module ? ( module   => $module ) : (),
+        %option,
+    );
+    $wadl->write_modules;
+
+    if ( $option{save} ) {
+        my $file = $wadl_file;
+        $file =~ s{[/:?&]}{_}g;
+        my $fh = file("$file.wadl")->openw;
+        print {$fh} $wadl->document->xml->toString();
+
+        for my $schema ($wadl->get_xsd->get_schemas) {
+            next if ! $schema->location;
+            my $file = $schema->location;
             $file =~ s{[/:?&]}{_}g;
-            my $fh = file("$file.wadl")->openw;
-            print {$fh} $wadl->document->xml->toString();
-
-            for my $schema ($wadl->get_xsd->get_schemas) {
-                next if ! $schema->location;
-                my $file = $schema->location;
-                $file =~ s{[/:?&]}{_}g;
-                my $fh = file("$file.xsd")->openw;
-                print {$fh} $schema->xml->toString();
-            }
+            my $fh = file("$file.xsd")->openw;
+            print {$fh} $schema->xml->toString();
         }
     }
 
