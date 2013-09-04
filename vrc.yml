@@ -12,18 +12,6 @@ wadl-doc:
 wadl-templ:
     - templates/wadl/*.tt
 
-xsd:
-    - bin/xsdparser
-    - lib/W3C/SOAP/XSD.pm
-    - lib/W3C/SOAP/XSD/*.pm
-    - lib/W3C/SOAP/XSD/Meta/Method.pm
-
-xsd-doc:
-    - lib/W3C/SOAP/XSD/Document/*.pm
-
-xsd-templ:
-    - templates/xsd/*.tt
-
 5:
     - t/app*
 
