@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION     = version->new('0.0.7');
+our $VERSION = version->new('0.0.7');
 
 has name => (
     is        => 'rw',
