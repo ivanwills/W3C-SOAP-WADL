@@ -12,7 +12,9 @@ use version;
 use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
+use W3C::SOAP::WADL::Document::Param;
 use W3C::SOAP::WADL::Document::Method;
+use W3C::SOAP::WADL::Document::Resource;
 
 our $VERSION = version->new('0.004');
 
