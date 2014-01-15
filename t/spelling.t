@@ -29,6 +29,7 @@ add_stopwords(qw/
     NSW
     Hornsby
     WADL
+    wadl
     wadlparser
     XSD
     XSDs

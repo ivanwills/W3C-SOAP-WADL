@@ -217,7 +217,7 @@ The L<wadl=parser> program generates static WADL clients that can be used
 by your own programs to talk to the WADL service.
 
 The L<wadl-parser> command can also (with the C<--show> flag) be used to
-give you a summary of what a WADL service provieds.
+give you a summary of what a WADL service provides.
 
 =head1 SUBROUTINES/METHODS
 
