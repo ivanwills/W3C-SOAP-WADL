@@ -128,8 +128,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Element - Provides ability to map inputted request object
-to response object.
+W3C::SOAP::WADL::Element - Provides ability to map inputted request object to response object.
 
 =head1 VERSION
 

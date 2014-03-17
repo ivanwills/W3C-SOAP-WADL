@@ -310,8 +310,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Parser - Parses a WADL file and produces a client for
-calling the specified webservice.
+W3C::SOAP::WADL::Parser - Parses a WADL file and produces a client for calling the specified webservice.
 
 =head1 VERSION
 
