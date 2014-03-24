@@ -47,4 +47,3 @@ not_in_file_ok(Changes =>
 );
 
 module_boilerplate_ok('lib/W3C/SOAP/WADL.pm');
-
