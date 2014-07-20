@@ -26,7 +26,7 @@ post '/ping' => sub {
     $self->res->headers->header('X-Response-ID', $x_r++);
     $self->res->headers->header('Response-ID', $i_r++);
 
-    my $status = $self->req->headers->{headers}{'i-status'}[0][0];
+    my $status = $self->req->headers->{headers}{'i-status'}[0];
     if ( !$status ) {
         warn 1;
         $self->render(json => {message => 'post'}, status => 200 );

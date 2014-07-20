@@ -32,6 +32,7 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More'        => 0,
         'Test::NoWarnings'  => 0,
+        'Mojolicious'       => 5,
         'Mojolicious::Lite' => 0,
         'WWW::Mechanize'    => 0,
     },
