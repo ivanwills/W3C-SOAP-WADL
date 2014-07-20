@@ -149,6 +149,7 @@ sub write_method_object {
     my $path = $resource->path;
     $path =~ s{^/}{};
     $path =~ s{/}{::}g;
+    $path =~ s{[^\w:]}{_}g;
     my $class_name = $base . '::' . $path . uc $method->name;
     $class_name .= '::' . $type->status if $type->can('status') && $type->status;
     my $file = $self->lib . '/' . $class_name . '.pm';
