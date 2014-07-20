@@ -1,4 +1,5 @@
 [% PROCESS config.tt -%]
+[% modules_loaded = {} -%]
 package [% module %];
 
 # Created on: [% date %] [% time %]
@@ -13,10 +14,14 @@ use version;
 use namespace::autoclean;
 use Data::Dumper qw/Dumper/;
 use W3C::SOAP::WADL::Utils;
-[% FOR method IN methods %]
-use [% method.value.request  %];
-[%-    FOR response IN method.value.response %]
-use [% response.value %];
+[% FOR method IN methods -%]
+[%     used = method.value.request -%]
+[%     'use ' _ used _ ";\n" IF !modules_loaded.$used -%]
+[%-    modules_loaded.$used = 1 -%]
+[%-    FOR response IN method.value.response -%]
+[%-        used = response.value -%]
+[%         'use ' _ used _ ";\n" IF !modules_loaded.$used -%]
+[%-        modules_loaded.$used = 1 -%]
 [%-    END -%]
 [% END %]
 
