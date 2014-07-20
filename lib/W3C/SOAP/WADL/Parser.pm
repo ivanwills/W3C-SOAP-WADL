@@ -24,6 +24,7 @@ use W3C::SOAP::WADL::Meta::Method;
 use MooseX::Types::Moose qw/Str Int HashRef/;
 use JSON qw/decode_json/;
 use W3C::SOAP::Utils qw/ns2module/;
+use TryCatch;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -80,38 +81,43 @@ sub write_modules {
 
         for my $resource (@{ $resources->resource }) {
             for my $method (@{ $resource->method }) {
-                my $request  = $self->write_method_object(
-                    $class_name,
-                    $resources,
-                    $resource,
-                    $method,
-                    $method->request
-                );
+                try {
+                    my $request  = $self->write_method_object(
+                        $class_name,
+                        $resources,
+                        $resource,
+                        $method,
+                        $method->request
+                    );
 
-                my %responses;
-                eval { $method->response };
-                if ( $method->has_response ) {
-                    for my $response (@{ $method->response }) {
-                        $responses{$response->status}
-                            = $self->write_method_object(
-                                $class_name,
-                                $resources,
-                                $resource,
-                                $method,
-                                $response,
-                            );
+                    my %responses;
+                    eval { $method->response };
+                    if ( $method->has_response ) {
+                        for my $response (@{ $method->response }) {
+                            $responses{$response->status}
+                                = $self->write_method_object(
+                                    $class_name,
+                                    $resources,
+                                    $resource,
+                                    $method,
+                                    $response,
+                                );
+                        }
                     }
-                }
 
-                my $name = $resource->path . '_' . uc $method->name;
-                $methods{$name} = {
-                    package_name => $class_name,
-                    name         => $name,
-                    path         => $resource->path,
-                    method       => $method->name,
-                    request      => $request,
-                    response     => \%responses,
-                };
+                    my $name = $resource->path . '_' . uc $method->name;
+                    $methods{$name} = {
+                        package_name => $class_name,
+                        name         => $name,
+                        path         => $resource->path,
+                        method       => $method->name,
+                        request      => $request,
+                        response     => \%responses,
+                    };
+                }
+                catch ($e) {
+                    warn "Couldn't generate output for $class_name " . $resource->path . ' - ' . $method->name  ."!\n$e";
+                }
             }
         }
 
