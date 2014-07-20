@@ -146,7 +146,10 @@ sub write_module {
 
 sub write_method_object {
     my ( $self, $base, $resources, $resource, $method, $type ) = @_;
-    my $class_name = $base . '::' . $resource->path . uc $method->name;
+    my $path = $resource->path;
+    $path =~ s{^/}{};
+    $path =~ s{/}{::}g;
+    my $class_name = $base . '::' . $path . uc $method->name;
     $class_name .= '::' . $type->status if $type->can('status') && $type->status;
     my $file = $self->lib . '/' . $class_name . '.pm';
     $file =~ s{::}{/}g;
