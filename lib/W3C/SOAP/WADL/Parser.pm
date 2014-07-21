@@ -105,7 +105,7 @@ sub write_modules {
                         }
                     }
 
-                    my $name = $resource->path . '_' . uc $method->name;
+                    my $name = $self->path_to_name($resource->path, 'method') . '_' . uc $method->name;
                     $methods{$name} = {
                         package_name => $class_name,
                         name         => $name,
@@ -150,12 +150,26 @@ sub write_module {
         if $template->error;
 }
 
+sub path_to_name {
+    my ($self, $path, $type) = @_;
+
+    $path =~ s{^/}{};
+
+    if ($type eq 'module') {
+        $path =~ s{/}{::}g;
+    }
+    elsif ( $type eq 'method' ) {
+        $path =~ s{/}{_}g;
+    }
+
+    $path =~ s{[^\w:]}{_}g;
+
+    return $path;
+}
+
 sub write_method_object {
     my ( $self, $base, $resources, $resource, $method, $type ) = @_;
-    my $path = $resource->path;
-    $path =~ s{^/}{};
-    $path =~ s{/}{::}g;
-    $path =~ s{[^\w:]}{_}g;
+    my $path = $self->path_to_name($resource->path, 'module');
     my $class_name = $base . '::' . $path . uc $method->name;
     $class_name .= '::' . $type->status if $type->can('status') && $type->status;
     my $file = $self->lib . '/' . $class_name . '.pm';
