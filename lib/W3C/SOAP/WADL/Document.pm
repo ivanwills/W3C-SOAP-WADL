@@ -40,6 +40,9 @@ has_xpath_object_list representation => (
 has_xpath_object_list param => (
     '//wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );
+has_xpath_object_list schemas => (
+    '//wadl:grammars/wadl:include' => 'W3C::SOAP::XSD::Document',
+);
 
 has module => (
     is        => 'rw',
@@ -55,6 +58,13 @@ has file => (
     is        => 'rw',
     isa       => 'Str',
     predicate => 'has_file',
+);
+has ns_module_map => (
+    is        => 'rw',
+    isa       => 'HashRef[Str]',
+    required  => 1,
+    predicate => 'has_ns_module_map',
+    default   => sub{{}},
 );
 
 finalize_class();
