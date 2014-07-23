@@ -41,7 +41,7 @@ has_xpath_object_list param => (
     '//wadl:param' => 'W3C::SOAP::WADL::Document::Param',
 );
 has_xpath_object_list schemas => (
-    '//wadl:grammars/wadl:include' => 'W3C::SOAP::XSD::Document',
+    '//wadl:grammars/wadl:include' => 'W3C::SOAP::WADL::XSD',
 );
 
 has module => (
