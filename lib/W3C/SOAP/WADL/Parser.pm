@@ -18,6 +18,7 @@ use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;
 use W3C::SOAP::XSD;
+use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WADL;
 use W3C::SOAP::WADL::Traits;
 use W3C::SOAP::WADL::Meta::Method;
@@ -47,6 +48,13 @@ has '+document' => (
     },
 );
 
+has xsd_parser => (
+    is      => 'rw',
+    isa     => 'W3C::SOAP::XSD::Parser',
+    builder => '_xsd_parser',
+    lazy    => 1,
+);
+
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
     my $args
@@ -66,12 +74,16 @@ sub write_modules {
     my ($self) = @_;
     confess "No lib directory setup" if !$self->has_lib;
     confess "No template object set" if !$self->has_template;
+
     if ( !$self->has_module ) {
        confess "No module name setup" if !$self->module_base;
        $self->module($self->module_base . '::' . ns2module($self->target_namespace));
    }
 
     my $class_base = $self->document->module || 'Dynamic::WADL';
+
+    my $xsd_parser = $self->get_xsd;
+    my @modules = $xsd_parser->write_modules;
 
     for my $resources (@{ $self->document->resources }) {
         my $class_name = $class_base . '::' . ns2module($resources->path);
@@ -326,6 +338,46 @@ sub add_representations {
     );
 
     return;
+}
+
+sub _xsd_parser {
+    my ($self) = @_;
+
+    my @args;
+    push @args, ( template      => $self->template ) if $self->has_template;
+    push @args, ( lib           => $self->lib      ) if $self->has_lib     ;
+    if ( $self->has_module_base ) {
+        my $base = $self->module_base;
+        $base =~ s/WSDL/XSD/;
+        $base .= '::XSD' if $base !~ /XSD/;
+        push @args, ( module_base => $base );
+    }
+
+    my $parse = W3C::SOAP::XSD::Parser->new(
+        document      => [],
+        ns_module_map => $self->ns_module_map,
+        @args,
+    );
+
+    return $parse;
+}
+
+sub get_xsd {
+    my ($self) = @_;
+    my $parse = $self->xsd_parser;
+
+    for my $xsd (@{ $self->document->schemas }) {
+        $xsd->ns_module_map($self->ns_module_map);
+        $xsd->module_base($self->module_base . '::XSD') if defined $self->module_base;
+        $xsd->clear_xpc;
+
+        push @{ $parse->document }, $xsd;
+
+        $parse->document->[-1]->target_namespace($self->document->target_namespace)
+            if !$parse->document->[-1]->has_target_namespace;
+    }
+
+    return $parse;
 }
 
 1;
