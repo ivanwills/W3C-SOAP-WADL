@@ -26,6 +26,7 @@ use MooseX::Types::Moose qw/Str Int HashRef/;
 use JSON qw/decode_json/;
 use W3C::SOAP::Utils qw/ns2module/;
 use TryCatch;
+use WWW::Mechanize;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -64,8 +65,19 @@ around BUILDARGS => sub {
 
     # keep the interface the same as other W3C::SOAP parsers but need to
     # support XML::Rabbits parameters
-    $args->{file} = $args->{location} if $args->{location};
-    $args->{xml}  = $args->{string}   if $args->{string};
+    if ( $args->{location} ) {
+        if ( -f $args->{location} ) {
+            $args->{file} = $args->{location};
+        }
+        else {
+            my $mech = WWW::Mechanize->new();
+            $mech->get( $args->{location} );
+            $args->{xml} = $mech->content;
+        }
+    }
+    elsif ( $args->{string} ) {
+        $args->{xml} = $args->{string};
+    }
 
     return $class->$orig($args);
 };
