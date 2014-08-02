@@ -18,12 +18,15 @@ use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;
 use W3C::SOAP::XSD;
+use W3C::SOAP::XSD::Parser;
 use W3C::SOAP::WADL;
 use W3C::SOAP::WADL::Traits;
 use W3C::SOAP::WADL::Meta::Method;
 use MooseX::Types::Moose qw/Str Int HashRef/;
 use JSON qw/decode_json/;
 use W3C::SOAP::Utils qw/ns2module/;
+use TryCatch;
+use WWW::Mechanize;
 
 Moose::Exporter->setup_import_methods(
     as_is => ['load_wadl'],
@@ -46,6 +49,13 @@ has '+document' => (
     },
 );
 
+has xsd_parser => (
+    is      => 'rw',
+    isa     => 'W3C::SOAP::XSD::Parser',
+    builder => '_xsd_parser',
+    lazy    => 1,
+);
+
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
     my $args
@@ -55,8 +65,19 @@ around BUILDARGS => sub {
 
     # keep the interface the same as other W3C::SOAP parsers but need to
     # support XML::Rabbits parameters
-    $args->{file} = $args->{location} if $args->{location};
-    $args->{xml}  = $args->{string}   if $args->{string};
+    if ( $args->{location} ) {
+        if ( -f $args->{location} ) {
+            $args->{file} = $args->{location};
+        }
+        else {
+            my $mech = WWW::Mechanize->new();
+            $mech->get( $args->{location} );
+            $args->{xml} = $mech->content;
+        }
+    }
+    elsif ( $args->{string} ) {
+        $args->{xml} = $args->{string};
+    }
 
     return $class->$orig($args);
 };
@@ -65,12 +86,16 @@ sub write_modules {
     my ($self) = @_;
     confess "No lib directory setup" if !$self->has_lib;
     confess "No template object set" if !$self->has_template;
+
     if ( !$self->has_module ) {
        confess "No module name setup" if !$self->module_base;
        $self->module($self->module_base . '::' . ns2module($self->target_namespace));
    }
 
     my $class_base = $self->document->module || 'Dynamic::WADL';
+
+    my $xsd_parser = $self->get_xsd;
+    my @modules = $xsd_parser->write_modules;
 
     for my $resources (@{ $self->document->resources }) {
         my $class_name = $class_base . '::' . ns2module($resources->path);
@@ -80,38 +105,43 @@ sub write_modules {
 
         for my $resource (@{ $resources->resource }) {
             for my $method (@{ $resource->method }) {
-                my $request  = $self->write_method_object(
-                    $class_name,
-                    $resources,
-                    $resource,
-                    $method,
-                    $method->request
-                );
+                try {
+                    my $request  = $self->write_method_object(
+                        $class_name,
+                        $resources,
+                        $resource,
+                        $method,
+                        $method->request
+                    );
 
-                my %responses;
-                eval { $method->response };
-                if ( $method->has_response ) {
-                    for my $response (@{ $method->response }) {
-                        $responses{$response->status}
-                            = $self->write_method_object(
-                                $class_name,
-                                $resources,
-                                $resource,
-                                $method,
-                                $response,
-                            );
+                    my %responses;
+                    eval { $method->response };
+                    if ( $method->has_response ) {
+                        for my $response (@{ $method->response }) {
+                            $responses{$response->status}
+                                = $self->write_method_object(
+                                    $class_name,
+                                    $resources,
+                                    $resource,
+                                    $method,
+                                    $response,
+                                );
+                        }
                     }
-                }
 
-                my $name = $resource->path . '_' . uc $method->name;
-                $methods{$name} = {
-                    package_name => $class_name,
-                    name         => $name,
-                    path         => $resource->path,
-                    method       => $method->name,
-                    request      => $request,
-                    response     => \%responses,
-                };
+                    my $name = $self->path_to_name($resource->path, 'method') . '_' . uc $method->name;
+                    $methods{$name} = {
+                        package_name => $class_name,
+                        name         => $name,
+                        path         => $resource->path,
+                        method       => $method->name,
+                        request      => $request,
+                        response     => \%responses,
+                    };
+                }
+                catch ($e) {
+                    warn "Couldn't generate output for $class_name " . $resource->path . ' - ' . $method->name  ."!\n$e";
+                }
             }
         }
 
@@ -144,9 +174,27 @@ sub write_module {
         if $template->error;
 }
 
+sub path_to_name {
+    my ($self, $path, $type) = @_;
+
+    $path =~ s{^/}{};
+
+    if ($type eq 'module') {
+        $path =~ s{/}{::}g;
+    }
+    elsif ( $type eq 'method' ) {
+        $path =~ s{/}{_}g;
+    }
+
+    $path =~ s{[^\w:]}{_}g;
+
+    return $path;
+}
+
 sub write_method_object {
     my ( $self, $base, $resources, $resource, $method, $type ) = @_;
-    my $class_name = $base . '::' . $resource->path . uc $method->name;
+    my $path = $self->path_to_name($resource->path, 'module');
+    my $class_name = $base . '::' . $path . uc $method->name;
     $class_name .= '::' . $type->status if $type->can('status') && $type->status;
     my $file = $self->lib . '/' . $class_name . '.pm';
     $file =~ s{::}{/}g;
@@ -302,6 +350,46 @@ sub add_representations {
     );
 
     return;
+}
+
+sub _xsd_parser {
+    my ($self) = @_;
+
+    my @args;
+    push @args, ( template      => $self->template ) if $self->has_template;
+    push @args, ( lib           => $self->lib      ) if $self->has_lib     ;
+    if ( $self->has_module_base ) {
+        my $base = $self->module_base;
+        $base =~ s/WSDL/XSD/;
+        $base .= '::XSD' if $base !~ /XSD/;
+        push @args, ( module_base => $base );
+    }
+
+    my $parse = W3C::SOAP::XSD::Parser->new(
+        document      => [],
+        ns_module_map => $self->ns_module_map,
+        @args,
+    );
+
+    return $parse;
+}
+
+sub get_xsd {
+    my ($self) = @_;
+    my $parse = $self->xsd_parser;
+
+    for my $xsd (@{ $self->document->schemas }) {
+        $xsd->ns_module_map($self->ns_module_map);
+        $xsd->module_base($self->module_base . '::XSD') if defined $self->module_base;
+        $xsd->clear_xpc;
+
+        push @{ $parse->document }, $xsd;
+
+        $parse->document->[-1]->target_namespace($self->document->target_namespace)
+            if !$parse->document->[-1]->has_target_namespace;
+    }
+
+    return $parse;
 }
 
 1;

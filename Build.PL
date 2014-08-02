@@ -20,10 +20,12 @@ my $builder = Module::Build->new(
         'Scalar::Util'                 => 0,
         'Template'                     => 0,
         'TryCatch'                     => 0,
-        'W3C::SOAP::Utils'             => '0.1.0',
-        'W3C::SOAP::XSD'               => '0.1.0',
+        'W3C::SOAP::Utils'             => '0.08',
+        'W3C::SOAP::XSD'               => '0.08',
+        'W3C::SOAP::XSD::Parser'       => '0.08',
         'XML::Rabbit'                  => 0,
         'XML::Rabbit::Root'            => 0,
+        'namespace::autoclean'         => 0,
         'version'                      => 0,
     },
     configure_requires => {
@@ -32,6 +34,7 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More'        => 0,
         'Test::NoWarnings'  => 0,
+        'Mojolicious'       => 5,
         'Mojolicious::Lite' => 0,
         'WWW::Mechanize'    => 0,
     },

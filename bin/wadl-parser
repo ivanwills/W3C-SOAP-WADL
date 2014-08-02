@@ -97,7 +97,7 @@ sub main {
             pod2usage( -verbose => 1 );
         }
         $wadl_file = $module;
-        $module = undef;
+        $module = $option{module_base};
     }
 
     # check that %map modules don't overlap with $option{ns_module_map} modules
