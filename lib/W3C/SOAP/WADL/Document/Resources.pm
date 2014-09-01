@@ -7,6 +7,7 @@ package W3C::SOAP::WADL::Document::Resources;
 # $Revision$, $Source$, $Date$
 
 use strict;
+use warnings;
 use XML::Rabbit;
 use version;
 use Carp;
