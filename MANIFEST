@@ -27,6 +27,7 @@ lib/W3C/SOAP/WADL/Meta/Method.pm
 lib/W3C/SOAP/WADL/Parser.pm
 lib/W3C/SOAP/WADL/Traits.pm
 lib/W3C/SOAP/WADL/Utils.pm
+lib/W3C/SOAP/WADL/XSD.pm
 t/00-load.t
 t/app.pl
 t/app.t
@@ -40,4 +41,3 @@ t/perlcriticrc
 t/spelling.t
 templates/wadl/element.pm.tt
 templates/wadl/pm.tt
-

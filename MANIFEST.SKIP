@@ -69,3 +69,8 @@ tags
 tmp/
 vrc.yml
 t/lib/Test/*
+.cpan.tag
+.perl.tag
+.travis.yml
+app.err.log
+app.log
