@@ -165,6 +165,8 @@ sub write_module {
     $template->process($tt, $data, "$file");
     confess "Error in creating $file (via $tt): ". $template->error."\n"
         if $template->error;
+
+    return;
 }
 
 sub path_to_name {
