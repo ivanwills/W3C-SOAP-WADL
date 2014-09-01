@@ -27,7 +27,6 @@ my $builder = Module::Build->new(
         'W3C::SOAP::XSD'               => '0.08',
         'W3C::SOAP::XSD::Document'     => '0.08',
         'W3C::SOAP::XSD::Parser'       => '0.08',
-        'WWW::Mechanize'               => '1.73',
         'XML::Rabbit'                  => 0,
         'XML::Rabbit::Root'            => 0,
         'namespace::autoclean'         => 0,
