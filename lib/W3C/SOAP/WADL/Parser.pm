@@ -85,14 +85,14 @@ sub write_modules {
        $self->module($self->module_base . '::' . ns2module($self->target_namespace));
    }
 
-    my $class_base = $self->document->module || 'Dynamic::WADL';
+    my $class_base = $self->module || $self->module_base || 'Dynamic::WADL';
 
     my $xsd_parser = $self->get_xsd;
     my @modules = $xsd_parser->write_modules;
 
     for my $resources (@{ $self->document->resources }) {
         my $class_name = $class_base . '::' . ns2module($resources->path);
-        my $file       = $self->lib . '/' . $self->module . '.pm';
+        my $file       = $self->lib . '/' . ( $self->module || $self->module_base ) . '.pm';
         $file =~ s{::}{/}g;
         my %methods;
 
@@ -149,7 +149,7 @@ sub write_modules {
         );
     }
 
-    return;
+    return $class_base;
 }
 
 my %written;

@@ -114,6 +114,8 @@ sub main {
         %option,
     );
     $wadl->write_modules;
+    my $generated = $wadl->module;
+    print "Generated WADL client $generated\n";
 
     if ( $option{save} ) {
         my $file = $wadl_file;
