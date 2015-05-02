@@ -132,7 +132,7 @@ W3C::SOAP::WADL::Element - Provides ability to map inputted request object to re
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Element version 0.1.
+This documentation refers to W3C::SOAP::WADL::Element version 0.004.
 
 =head1 SYNOPSIS
 

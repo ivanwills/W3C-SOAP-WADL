@@ -46,7 +46,7 @@ W3C::SOAP::WADL::XSD - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::XSD version HASH(0x110b898)
+This documentation refers to W3C::SOAP::WADL::XSD version 0.004.
 
 
 =head1 SYNOPSIS

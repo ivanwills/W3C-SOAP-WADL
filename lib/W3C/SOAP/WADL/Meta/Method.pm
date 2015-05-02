@@ -18,7 +18,7 @@ use English qw/ -no_match_vars /;
 
 extends 'Moose::Meta::Method';
 
-our $VERSION = version->new('0.0.7');
+our $VERSION = version->new('0.004');
 
 has name => (
     is        => 'rw',
@@ -59,7 +59,7 @@ W3C::SOAP::WADL::Meta::Method - Parameters needed for WADL operations.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Meta::Method version 0.0.7.
+This documentation refers to W3C::SOAP::WADL::Meta::Method version 0.004.
 
 =head1 SYNOPSIS
 

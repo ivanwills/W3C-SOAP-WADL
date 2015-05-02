@@ -40,7 +40,7 @@ W3C::SOAP::WADL::Document::Request - <One-line description of module's purpose>
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Request version 0.1.
+This documentation refers to W3C::SOAP::WADL::Document::Request version 0.004.
 
 =head1 SYNOPSIS
 

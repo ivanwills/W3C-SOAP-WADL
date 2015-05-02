@@ -80,7 +80,7 @@ W3C::SOAP::WADL::Document - The representation of the WADL document
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document version 0.1.
+This documentation refers to W3C::SOAP::WADL::Document version 0.004.
 
 =head1 SYNOPSIS
 

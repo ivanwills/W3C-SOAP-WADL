@@ -149,7 +149,7 @@ W3C::SOAP::WADL - The base object for WADL clients.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL version 0.1.
+This documentation refers to W3C::SOAP::WADL version 0.004.
 
 =head1 SYNOPSIS
 

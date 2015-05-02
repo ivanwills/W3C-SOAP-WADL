@@ -397,7 +397,7 @@ W3C::SOAP::WADL::Parser - Parses a WADL file and produces a client for calling t
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Parser version 0.1.
+This documentation refers to W3C::SOAP::WADL::Parser version 0.004.
 
 =head1 SYNOPSIS
 

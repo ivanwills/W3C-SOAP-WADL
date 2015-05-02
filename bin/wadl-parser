@@ -183,7 +183,7 @@ wadl-parser - Parses a WADL file to generate a REST client
 
 =head1 VERSION
 
-This documentation refers to wadl-parser version 0.1.
+This documentation refers to wadl-parser version 0.004.
 
 =head1 SYNOPSIS
 
