@@ -448,6 +448,14 @@ Adds the parameters for a method
 
 Adds the representations that a method can take
 
+=head2 C<path_to_name ($path, $type)>
+
+Converts C<$path> to a Perl module name
+
+=head2 C<get_xsd ()>
+
+Gets any included/linked XSD documents.
+
 =head1 DIAGNOSTICS
 
 =head1 CONFIGURATION AND ENVIRONMENT
