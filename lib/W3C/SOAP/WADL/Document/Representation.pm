@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document::Representation - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Representation - Container for WADL representation elements
 
 =head1 VERSION
 

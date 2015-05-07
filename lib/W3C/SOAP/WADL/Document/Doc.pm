@@ -28,7 +28,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document::Doc - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Doc - Container for WADL doc element
 
 =head1 VERSION
 

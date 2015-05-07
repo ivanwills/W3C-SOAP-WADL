@@ -26,7 +26,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document::Grammars - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Grammars - Container for WADL grammars
 
 =head1 VERSION
 

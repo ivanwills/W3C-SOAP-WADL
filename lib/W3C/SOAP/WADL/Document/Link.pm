@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-W3C::SOAP::WADL::Document::Link - <One-line description of module's purpose>
+W3C::SOAP::WADL::Document::Link - Container for WADL link elements
 
 =head1 VERSION
 
