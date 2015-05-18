@@ -16,7 +16,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Request;
 use W3C::SOAP::WADL::Document::Response;
 
-our $VERSION = version->new('0.004');
+our $VERSION = version->new('0.005');
 
 has_xpath_value name => './@name';
 has_xpath_value id   => './@id';
@@ -42,7 +42,7 @@ W3C::SOAP::WADL::Document::Method - Container for WADL method elements
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Method version 0.004.
+This documentation refers to W3C::SOAP::WADL::Document::Method version 0.005.
 
 =head1 SYNOPSIS
 

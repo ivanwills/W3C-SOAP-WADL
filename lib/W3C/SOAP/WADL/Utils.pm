@@ -20,7 +20,7 @@ Moose::Exporter->setup_import_methods(
     with_meta => ['operation'],
 );
 
-our $VERSION = version->new('0.004');
+our $VERSION = version->new('0.005');
 
 sub operation {
     my ( $meta, $name, %options ) = @_;
@@ -46,7 +46,7 @@ W3C::SOAP::WADL::Utils - WADL related utilities
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Utils version 0.004
+This documentation refers to W3C::SOAP::WADL::Utils version 0.005
 
 
 =head1 SYNOPSIS

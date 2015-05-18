@@ -14,7 +14,7 @@ use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.004');
+our $VERSION = version->new('0.005');
 
 has_xpath_value_list include => './wadl:include@href';
 
@@ -30,7 +30,7 @@ W3C::SOAP::WADL::Document::Grammars - Container for WADL grammars
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Grammars version 0.004.
+This documentation refers to W3C::SOAP::WADL::Document::Grammars version 0.005.
 
 =head1 SYNOPSIS
 
