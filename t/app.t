@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 use Test::More;
-use Path::Class;
+use Path::Tiny;
 use W3C::SOAP::WADL::Parser;
 use WWW::Mechanize;
 use TryCatch;
 use Data::Dumper qw/Dumper/;
 
-my $app  = file($0)->parent->file('app.pl');
+my $app  = path($0)->parent->child('app.pl');
 my $port = 4000;
 my $pid  = fork;
 

@@ -13,7 +13,6 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::Utils qw/ns2module/;
 use W3C::SOAP::WADL::Document;
-use Path::Class;
 use File::ShareDir qw/dist_dir/;
 use Moose::Util::TypeConstraints;
 use W3C::SOAP::Utils qw/split_ns/;

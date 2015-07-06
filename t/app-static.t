@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Path::Class;
+use Path::Tiny;
 use W3C::SOAP::WADL::Parser;
 use WWW::Mechanize;
 use TryCatch;
@@ -11,8 +11,8 @@ use File::ShareDir qw/dist_dir/;
 use Template;
 use Data::Dumper qw/Dumper/;
 
-my $dir  = file($0)->parent;
-my $app  = file($0)->parent->file('app.pl');
+my $dir  = path($0)->parent;
+my $app  = path($0)->parent->child('app.pl');
 my $port = 4001;
 my $pid  = fork;
 
@@ -92,7 +92,7 @@ sub get_parser {
     }
 
     $wadl->write_modules;
-    ok -f $dir->file(qw/lib Test Ping.pm/), "Wrote main lib file";
+    ok -f $dir->child(qw/lib Test Ping.pm/), "Wrote main lib file";
 
     # add path to @INC;
     push @INC, $dir->subdir('lib').'';
