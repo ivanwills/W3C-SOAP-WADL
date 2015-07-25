@@ -12,7 +12,7 @@ use Carp qw/carp croak cluck confess longmess/;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.005');
+our $VERSION = version->new('0.006');
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
@@ -132,7 +132,7 @@ W3C::SOAP::WADL::Element - Provides ability to map inputted request object to re
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Element version 0.005.
+This documentation refers to W3C::SOAP::WADL::Element version 0.006.
 
 =head1 SYNOPSIS
 

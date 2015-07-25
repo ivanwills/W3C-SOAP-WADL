@@ -14,7 +14,7 @@ use Carp;
 use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 
-our $VERSION = version->new('0.005');
+our $VERSION = version->new('0.006');
 
 has_xpath_value id => './@id';
 has_xpath_value name => './@name';
@@ -38,7 +38,7 @@ W3C::SOAP::WADL::Document::Param - Container for WADL param elements
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Param version 0.005.
+This documentation refers to W3C::SOAP::WADL::Document::Param version 0.006.
 
 =head1 SYNOPSIS
 

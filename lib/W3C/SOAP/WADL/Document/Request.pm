@@ -16,7 +16,7 @@ use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Param;
 use W3C::SOAP::WADL::Document::Representation;
 
-our $VERSION = version->new('0.005');
+our $VERSION = version->new('0.006');
 
 has_xpath_value_list doc => './wadl:doc';
 has_xpath_object_list representation => (
@@ -40,7 +40,7 @@ W3C::SOAP::WADL::Document::Request - Container for WADL request elements
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Request version 0.005.
+This documentation refers to W3C::SOAP::WADL::Document::Request version 0.006.
 
 =head1 SYNOPSIS
 

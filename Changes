@@ -1,5 +1,11 @@
 Revision history for W3C-SOAP-WADL
 
+0.006   2015-07-25
+        Updating for release of version 0.006
+        Fixed subdir use from Path::Tiny conversion (Ivan Wills)
+        Converted to Path::Tiny (Ivan Wills)
+        Added Perl 5.22 to list of perl versions to build with (Ivan Wills)
+
 0.005   2015-05-18
         Updating for release of version 0.005
         Changed dependencies to Test::Warnings (Ivan Wills)
