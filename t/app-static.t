@@ -74,11 +74,11 @@ sub get_parser {
         location => "http://localhost:$port/wadl",
         template => $template,
         module   => 'Test::Ping',
-        lib      => $dir->subdir('lib').'',
+        lib      => $dir->child('lib').'',
     );
     ok $wadl, "Got a parser object";
 
-    my $test  = $dir->subdir('lib', 'Test');
+    my $test  = $dir->child('lib', 'Test');
     if ( -d $test ) {
         my @files = $test->children;
         for my $file (@files) {
@@ -95,7 +95,7 @@ sub get_parser {
     ok -f $dir->child(qw/lib Test Ping.pm/), "Wrote main lib file";
 
     # add path to @INC;
-    push @INC, $dir->subdir('lib').'';
+    push @INC, $dir->child('lib').'';
     # use generated module
     use_ok 'Test::Ping';
 
