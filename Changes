@@ -1,5 +1,9 @@
 Revision history for W3C-SOAP-WADL
 
+0.007   2015-09-05
+        Updating for release of version 0.007
+        Removed creation of makefile (Ivan Wills)
+
 0.006   2015-07-25
         Updating for release of version 0.006
         Fixed subdir use from Path::Tiny conversion (Ivan Wills)

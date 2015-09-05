@@ -17,7 +17,7 @@ use W3C::SOAP::WADL::Document::Param;
 use W3C::SOAP::WADL::Document::Method;
 use W3C::SOAP::WADL::Document::Resource;
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 has_xpath_value id => './@id';
 
@@ -45,7 +45,7 @@ W3C::SOAP::WADL::Document::ResourceType - Container for WADL resource type eleme
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::ResourceType version 0.006.
+This documentation refers to W3C::SOAP::WADL::Document::ResourceType version 0.007.
 
 =head1 SYNOPSIS
 

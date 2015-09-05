@@ -19,7 +19,7 @@ use W3C::SOAP::WADL::Parser;
 use File::ShareDir qw/dist_dir/;
 use Template;
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 my ($name)   = $PROGRAM_NAME =~ m{^.*/(.*?)$}mxs;
 
 my %option = (
@@ -183,7 +183,7 @@ wadl-parser - Parses a WADL file to generate a REST client
 
 =head1 VERSION
 
-This documentation refers to wadl-parser version 0.006.
+This documentation refers to wadl-parser version 0.007.
 
 =head1 SYNOPSIS
 

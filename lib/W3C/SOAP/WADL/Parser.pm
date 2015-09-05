@@ -32,7 +32,7 @@ Moose::Exporter->setup_import_methods(
 
 extends 'W3C::SOAP::Parser';
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 has '+document' => (
     isa      => 'W3C::SOAP::WADL::Document',
@@ -396,7 +396,7 @@ W3C::SOAP::WADL::Parser - Parses a WADL file and produces a client for calling t
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Parser version 0.006.
+This documentation refers to W3C::SOAP::WADL::Parser version 0.007.
 
 =head1 SYNOPSIS
 

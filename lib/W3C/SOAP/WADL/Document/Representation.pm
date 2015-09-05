@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Param;
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 has_xpath_value id         => './@id';
 has_xpath_value media_type => './@mediaType';
@@ -40,7 +40,7 @@ W3C::SOAP::WADL::Document::Representation - Container for WADL representation el
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Representation version 0.006.
+This documentation refers to W3C::SOAP::WADL::Document::Representation version 0.007.
 
 =head1 SYNOPSIS
 

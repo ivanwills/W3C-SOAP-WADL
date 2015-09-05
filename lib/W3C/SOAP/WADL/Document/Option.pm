@@ -15,7 +15,7 @@ use Data::Dumper qw/Dumper/;
 use English qw/ -no_match_vars /;
 use W3C::SOAP::WADL::Document::Param;
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 has_xpath_object_list param => (
     './wadl:param' => 'W3C::SOAP::WADL::Document::Param',
@@ -34,7 +34,7 @@ W3C::SOAP::WADL::Document::Option - Container for WADL option elements
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::Document::Option version 0.006.
+This documentation refers to W3C::SOAP::WADL::Document::Option version 0.007.
 
 =head1 SYNOPSIS
 

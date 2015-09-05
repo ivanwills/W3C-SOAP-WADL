@@ -15,7 +15,7 @@ use English qw/ -no_match_vars /;
 
 extends 'W3C::SOAP::XSD::Document';
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 around BUILDARGS => sub {
     my ($orig, $class, @args) = @_;
@@ -46,7 +46,7 @@ W3C::SOAP::WADL::XSD - Container for WADL XSD includes
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL::XSD version 0.006.
+This documentation refers to W3C::SOAP::WADL::XSD version 0.007.
 
 =head1 SYNOPSIS
 

@@ -16,7 +16,7 @@ use JSON qw/decode_json/;
 
 extends 'W3C::SOAP::Client';
 
-our $VERSION = version->new('0.006');
+our $VERSION = version->new('0.007');
 
 has _response => (
     is  => 'rw',
@@ -149,7 +149,7 @@ W3C::SOAP::WADL - The base object for WADL clients.
 
 =head1 VERSION
 
-This documentation refers to W3C::SOAP::WADL version 0.006.
+This documentation refers to W3C::SOAP::WADL version 0.007.
 
 =head1 SYNOPSIS
 
