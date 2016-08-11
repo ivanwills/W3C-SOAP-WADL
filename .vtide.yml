@@ -1,0 +1,21 @@
+---
+count: 12
+default:
+  restart: 0
+  wait: 1
+name: w3c-soap-wadl
+terminals:
+  1a:
+    wait: 0
+    # watch is a list of files (or file groups) to watch for changes and
+    # re-run the command. This watch waits for changes in files in the
+    # lib bin and tests directories and then runs tests
+    watch:
+      - lib
+      - bin
+      - all-tests
+    command: ./Build && ./Build testcover
+editor:
+  files:
+    eg:
+      - some-file.eg
