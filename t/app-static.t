@@ -28,7 +28,7 @@ elsif ( !$pid ) {
     open STDOUT, '>', '/dev/null';
 
     $ENV{PORT} = $port;
-    exec $app, 'daemon', '--listen', "http://*:$port";
+    exec $^X, $app, 'daemon', '--listen', "http://*:$port";
 }
 
 sleep 1;
